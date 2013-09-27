@@ -1,0 +1,15 @@
+<h2>Конфигурация базы данных</h2>
+
+<form method="post" action="">
+        
+		<br><B>Данные о базе данных</B>: 
+          <br><input type="text" name="hostname" value="<? if (isset($_POST['hostname'])) echo $_POST['hostname']; else echo $f['hostname']?>"> &nbsp; Хост
+		  <br><input type="text" name="username" value="<? if (isset($_POST['username'])) echo $_POST['username']; else echo $f['username']?>"> &nbsp; Имя пользователя
+          <br><input type="text" name="password" value="<? if (isset($_POST['password'])) echo $_POST['password']; else echo $f['password']?>"> &nbsp; Пароль
+          <br><input type="text" name="database" value="<? if (isset($_POST['database'])) echo $_POST['database']; else echo $f['database']?>"> &nbsp; Название базы данных
+          <br><input type="text" name="dbprefix" value="<? if (isset($_POST['dbprefix'])) echo $_POST['dbprefix']; else echo $f['dbprefix']?>"> &nbsp; Префикси для базы данных
+          
+			<br><br><input type="hidden" value="db_save" name="action">
+			<input type="submit" name="Submit" value="Сохранить параметры" class="sendrequest">
+</form>
+

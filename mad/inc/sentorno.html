@@ -1,0 +1,13 @@
+<?
+
+$sql = "select 'status' from `$section` where `id`='$f[id]'";
+$res2 = mysql_query($sql);
+mysql_fetch_array($res2);
+
+?>
+
+<select name='visibility' onChange="ChangeValue('status',this.value,'<? echo $f[id]; ?>','<? echo $section; ?>')" style="width:auto;">
+	<option value='1' <? select('status', '1'); ?>>Yes</option>
+	<option value='0' <? select('status', '0'); ?>>No</option>
+</select>
+	

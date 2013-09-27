@@ -1,0 +1,10 @@
+<form method="post" action="">
+        
+		<h3 id="first">Payment Method:</h3>
+
+			<?
+			GenerateInputTag("name","Name");
+			GenerateInputTag("fee","Fee in percents");
+			GenerateInputTag("url","URL - must start with http://");
+			include "inc/formend.html"; ?>
+</form>

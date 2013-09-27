@@ -1,0 +1,128 @@
+<br><br>
+
+<div class="listtabs">
+	<span>
+		<a href="/mad/translators/view/<? echo $f["id"]; ?>" style='margin-right: 25px; background: #91BFEE; color: white;'>View</a> 
+		<a href="javascript:void(0)" onclick="switchTab('0')" id="tab0" class="activeTab">General</a> 
+		<a href="javascript:void(0)" onclick="switchTab('1')" id="tab1" class="">Billing</a> 
+	</span>
+
+<span id='cpanelenable'><a href='javascript:void(0)' onclick="toggle_visibility('cpanel')">add new language pair, language, payment method</a></span>
+</div>
+
+<div id="cpanel" style='display:none;'>
+		<div class="popup" onClick="MM_openBrWindow('/mad/pairs/add/?pagetemplate=popup','width=380,height=240')" id="pair">add a new language pair</div>
+		<div class="popup" onClick="MM_openBrWindow('/mad/languages/add/?pagetemplate=popup','width=420,height=245')" id="language">add a new language</div>
+		<div class="popup" onClick="MM_openBrWindow('/mad/paymenttypes/add/?pagetemplate=popup','width=420,height=250')">Add a new payment method</div>
+</div>
+
+<form method="post" action="">
+
+	<div class="tab-panes">
+
+		<!-- Pane 0 -->
+		<div class="divtabs" id="pane0">
+
+<TABLE>
+	<TR>
+		<TD valign="top">
+		
+	<h4 id="first">Specialization:</h4>
+
+		<select name="language_pair">
+		<? include "../inc/shared/select_language_pair.html"; ?>
+		</select> &nbsp; Language pair 
+
+	<h4>Name & birthdate:</h4>
+
+			<? GenerateInputTag("firstname","First name");
+		GenerateInputTag("lastname","Last name");
+		GenerateInputTag("middlename","Middle name");
+		?>
+
+		<br><br>
+		
+		<? GenerateInputTag("birthdate","Birth Date") ?>
+
+				<script type="text/javascript">
+					calendar.set("labelbirthdate");
+				</script>
+
+ &nbsp;   &nbsp; &nbsp;&nbsp;<I>format: YYYY-MM-DD</I><br><br>
+
+	<h4 id="first">Primary contact details:</h4>
+
+			<? GenerateInputTag("email","Email");
+		GenerateInputTag("phone","Home phone");
+		GenerateInputTag("cellphone","Cell phone # ");
+		GenerateInputTag("fax","Fax phone #") 
+		?> 
+ &nbsp;   &nbsp; &nbsp;&nbsp;<I>phone format: + country code + city/area code + phone number</I>
+
+		</TD>
+
+
+
+
+		<TD valign="top">
+
+	<h4 id='first'>Note:</h4>
+		<? GenerateTextAreaTag("comment");	?>
+
+	<h4>Instant messengers:</h4>
+
+		<? GenerateInputTag("icq","ICQ uin");
+		GenerateInputTag("skype","Skype");
+		GenerateInputTag("gtalk","Google Talk") ?> 
+		 &nbsp;   &nbsp; &nbsp;&nbsp;<span class="javascriptlink" onClick="document.forms[0].gtalk.value=document.forms[0].email.value; return false;">the same as email</span>	
+
+	<h4>Postal details:</h4>
+
+		<? GenerateInputTag("street","Street");
+		GenerateInputTag("city","City");
+		GenerateInputTag("state","State/Region");
+		GenerateInputTag("country","Country");
+		GenerateInputTag("zip","ZIP/Postal code") ?>
+
+
+		
+		
+		</TD>
+    </TR>
+</TABLE>
+
+		</div>
+
+		<!-- Pane 0 -->
+		<div class="divtabs" id="pane1">
+
+	<h4 id="first">Payment details:</h4>
+		
+		<? echo GenerateSelectList("paymenttypes", "payment_prefs_id", "name"); ?> &nbsp; Preferred payment method
+
+	<h4>E-wallets:</h4>
+
+		<? GenerateInputTag("webmoney","Webmoney USD (Z)");
+		GenerateInputTag("webmoneyr","Webmoney RUR (R)");
+		GenerateInputTag("yandexmoney","YandexMoney");
+		GenerateInputTag("privat24","Privat24 (credit card number)");
+		GenerateInputTag("paypal","PayPal") ?> &nbsp;   &nbsp; &nbsp;&nbsp;
+		<span class="javascriptlink" onClick="document.forms[0].paypal.value=document.forms[0].email.value; return false;">the same as email</span>
+		
+	<h4>Salary rate:</h4>
+
+		<? GenerateInputTag("ppw","Price Per Word, USD");
+		GenerateInputTag("pppw","Price Per Proof, USD") ?>
+
+		</div>
+<? 
+include "inc/formend.html"; 
+?>
+
+		</div>	
+
+</form>
+
+
+
+

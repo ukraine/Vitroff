@@ -1,0 +1,34 @@
+<!-- modal dialog: assign translator -->
+<div id="add_translator_modal">
+    <a id="closemodal" href="#">X</a>
+
+    <form action="" method="post">
+        <h4>Assign new translator</h4>
+        <select name="translator">
+            <option value="0">Select translator...</option>
+            {translators_list}
+        </select>
+
+        <!-- ”казание данных о переводчике -->
+
+        <br>
+        {input_price}
+        {input_deadline}
+
+        <script type="text/javascript">
+            calendar.set("labeldeadline_translator_new");
+        </script>
+
+        {checkbox_pay}
+
+        <div class="modalcontrols">
+            <input type="submit" value="Assign"/>
+            <input type="reset" value="Cancel"/>
+        </div>
+
+        <input type="hidden" name="action" value="addnew"/>
+        <input type="hidden" name="request_id" value="{request_id}"/>
+
+    </form>
+
+</div>

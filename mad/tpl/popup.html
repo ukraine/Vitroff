@@ -1,0 +1,25 @@
+<head>
+	<title>MAD-CMS &raquo; <? echo (ucfirst($section)); echo " &raquo; "; echo (ucfirst($action)) ; ?></title>
+	<meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+	<meta name="robots" content="noindex,nofollow">
+	<link rel="stylesheet" href="<? echo $siteurl; ?>css/mad.css" type="text/css">
+	<link rel="stylesheet" href="<? echo $siteurl; ?>css/popup.css" type="text/css">
+	<script language="javascript" type="text/javascript" src="/mad/js/browserSniffer.js"></script>
+	<script language="javascript" type="text/javascript" src="/mad/js/dynCalendar.js"></script>
+	<script language="javascript" type="text/javascript" src="/mad/js/mm.js"></script>
+</head>
+
+<body id="popup">
+<h2><? echo $title?></h2>
+<!-- Content -->
+<div class="content">
+	<?
+
+	if ($action=="default" && $section!=="default" && $section!=="settings") include "inc/paginator.html";
+
+		errorMsg();
+		include "content/$section/$action.html"
+	?>
+</div>
+<!-- Content -->
+</body>

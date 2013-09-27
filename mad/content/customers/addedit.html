@@ -1,0 +1,118 @@
+<div class="listtabs">
+	<span>
+		<a href="javascript:void(0)" onclick="switchTab('0')" id="tab0" class="activeTab">General</a> 
+		<a href="javascript:void(0)" onclick="switchTab('1')" id="tab1" class="">Company details</a> 
+	</span>
+</div>
+
+<form method="post" action="">
+
+	<div class="tab-panes">
+
+		<!-- Pane 0 -->
+		<div class="divtabs" id="pane0">
+
+
+<TABLE>
+	<TR>
+		<TD valign='top'>
+
+		<h4 id="first">Name:</h4>
+
+			<? 
+				GenerateInputTag("firstname","First name"); 
+				GenerateInputTag("lastname","Last name");
+
+			?>
+
+		<h4>Contact details:</h4>
+		
+			<? 
+				GenerateInputTag("email","Email");
+				GenerateInputTag("phone","Home Phone");
+				GenerateInputTag("workphone","Work Phone");
+				GenerateInputTag("cellphone","Cell Phone");
+				GenerateInputTag("fax","Fax");
+				GenerateInputTag("url","Website");
+			?>
+
+
+		<h4>Shipping details:</h4>
+
+			<?
+
+				GenerateInputTag("street","Street");
+				GenerateInputTag("citystatezip","City, State, Zip");
+				GenerateInputTag("country","Country");
+			?>
+
+<div style='margin-left: 18px;'>
+	&uarr; <span class="javascriptlink" onClick="setValue('country','United States of America')">USA</span>
+	&uarr; <span class="javascriptlink" onClick="setValue('country','Russia')">Russia</span>
+</div>
+
+		</TD>
+		<td valign='top'>
+
+	<h4 id="first">Comment:</h4>
+		<? 
+		GenerateTextAreaTag("comment");
+		?>
+
+<h4>Payment method</h4>
+
+				<? GenerateSelectList("paymenttypes", "payment_prefs_id", "name", "Preferred payment method"); ?>
+
+			
+
+
+
+
+
+
+			
+			</TD>
+		</TR>
+</TABLE>
+
+		</div>
+		<!-- /Pane 0 -->
+
+		<!-- Pane 1 -->
+		<div class="divtabs" id="pane1">
+
+<table>
+<tr>
+<td valign='top'>
+
+<h4 id="first">Organization details</h4>
+
+			<?
+
+				$ProofreaderPaymentStatusCheckBox = array(
+				"iscompany" => "Check here if it's a company",
+				);
+
+				GenerateCheckBox($ProofreaderPaymentStatusCheckBox,"","<br/><br/>","style='width:auto;'");
+
+				GenerateInputTag("company_name","Name of the company"); 
+				GenerateInputTag("vat","VAT number"); 
+
+			?>
+
+</div>
+</td>
+</tr>
+</table>
+	
+		</div>
+		<!-- /Pane 1 -->
+
+	</div>
+
+		<?
+		GenerateInputTag("iscompany","","hidden");	
+		include "inc/formend.html";
+		?>
+
+</form>

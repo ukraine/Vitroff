@@ -1,0 +1,292 @@
+<div class="listtabs">
+	<span>
+		<a href="javascript:void(0)" onclick="switchTab('0')" id="tab0" class="activeTab">General</a> 
+		<a href="javascript:void(0)" onclick="switchTab('1')" id="tab1" class="">Workers</a>
+		<a href="javascript:void(0)" onclick="switchTab('2')" id="tab2" class="">Files</a>
+	</span>
+</div>
+
+
+<form method="post" action="" enctype="multipart/form-data" name="form">
+
+	<div id="cpanel">
+		<div class="popup" onClick="MM_openBrWindow('/mad/pairs/add/?pagetemplate=popup','width=380,height=220')" id="pair">add a new language pair</div>
+		<div class="popup" onClick="MM_openBrWindow('/mad/languages/add/?pagetemplate=popup','width=420,height=220')" id="language">add a new language</div>
+		<div class="popup" onClick="MM_openBrWindow('/mad/rates/add/?pagetemplate=popup','width=450,height=245')" id="rate">add a new area</div>
+		<div class="popup" onClick="MM_openBrWindow('/mad/customers/add/?pagetemplate=popup','width=550,height=845')" id="customer">add a new customer</div>
+		<div class="popup" onClick="MM_openBrWindow('/mad/translators/add/?pagetemplate=popup','width=840,height=600','yes')" id="translator">add a new translator</div>
+	</div>
+
+	<div class="tab-panes">
+		<div class="divtabs" id="pane0">
+        
+		<h3 id="first">Customer, language pair and billing info:</h3>		
+
+			<!-- Выбор языковой пары -->
+			<select name="language_pair">
+			<? include "../inc/shared/select_language_pair.html"; ?>
+			</select> &nbsp; Language pair &nbsp;&nbsp; <br>
+			<!-- Выбор языковой пары -->
+
+			<!-- Выбор тематики перевода -->
+			<? echo GenerateSelectList("rates", "area_id", "name"); ?> &nbsp; Select area &nbsp; &nbsp; &nbsp;&nbsp;  <br>
+			<!-- Выбор тематики перевода -->
+			
+			<!-- Выбор клиента -->
+			<select name="customer_id">
+			<? 
+				$res = mysql_query("select * from `customers` ORDER BY `lastname`");
+				while($col = mysql_fetch_array($res)) {
+					echo "\t\t\t<option value=".$col['id']."";
+					select('customer_id', $col['id']);
+					echo ">$col[lastname] $col[firstname]</option>\n";
+				}
+			?></select> &nbsp; Select customer <br><br>
+			<!-- Выбор клиента -->
+
+			<!-- Выбор ориентировочной цены, фактически оплаченной суммы и/или цены за слово -->
+			
+			<? 
+			GenerateInputTag("estimatedprice","Estimated price");
+			GenerateInputTag("amountpaid","Actual price");
+			GenerateInputTag("ppw","Customer's price per word");
+			?>
+
+		<!--  Исходные данные о заказе -->
+
+		<h3><a name="status"></a>Request details:</h3>
+
+			<div class="calendar">
+
+			<!-- JS Календаря для выбора дедлайна -->
+				
+			<script language="JavaScript" type="text/javascript">
+				<!--
+				/**
+				* Example callback function
+				*/
+				function exampleCallback_ISO1(date, month, year)
+				{
+					
+						var time	=	new Date
+						var houra	=	time.getHours()
+
+					if (String(month).length == 1) {
+						month = '0' + month;
+					}
+				
+					if (String(date).length == 1) {
+						date = '0' + date;
+					}    
+					document.forms[0].deadline.value = year + '-' + month + '-' + date + ' '+ houra + ':00:00';
+				}
+
+				calendar1 = new dynCalendar('calendar1', 'exampleCallback_ISO1');
+				calendar1.setYearComboRange(1);
+				calendar1.setMonthCombo(true);
+				calendar1.setYearCombo(true);
+				//-->
+			</script><? GenerateInputTag("deadline","Deadline") ?>
+			</div>
+
+		<!-- Вставка значений кол-ва слов, символов и выбор статуса проекта -->
+
+		<? GenerateInputTag("wordcount", "Number of words"); 
+		GenerateInputTag("characters","Number of characters");
+ 		echo GenerateSelectList("status", "status_id", "name"); ?> &nbsp; Select status  &nbsp; &nbsp; 
+
+
+		<h3><a name="notes"></a>Special notes:</h3>
+			<? 
+			
+			GenerateTextAreaTag("instructions"); 	
+			GenerateInputTag("proofreader_paid","","hidden");
+			GenerateInputTag("translator_paid","","hidden");			
+			include "inc/formend.html"; 
+						
+			?>
+
+		</div>
+
+
+
+
+
+		<div class="divtabs" id="pane1">
+
+		<h3 id="first"><a name="translator"></a>Translator & Proofreader:</h3>
+
+		<!-- Выбор переводчика -->
+
+		<select name="translator_id">
+		<option value="0">Assign translator...</option>
+		<?
+		$res = mysql_query("select * from `translators` /* WHERE `language_pair` = $f[language_pair]*/ ORDER BY `lastname`");
+		while($col = mysql_fetch_array($res))
+			{
+				echo "\t\t\t<option value=".$col['id']."";
+				select('translator_id', $col['id']);
+				echo ">$col[lastname] $col[firstname]</option>\n";
+			}
+
+		?>
+		</select> &nbsp; Select translator  &nbsp; &nbsp; 
+
+
+		<!-- Указание данных о переводчике -->
+
+			<br><? GenerateInputTag("ppwt","Translator's price"); ?> 
+
+		<!-- JS Календаря для выбора дедлайна для переводчика -->
+
+			<div class="calendar">
+			<script language="JavaScript" type="text/javascript">
+				<!--
+				/**
+				* Example callback function
+				*/
+				function exampleCallback_ISO3(date, month, year)
+				{
+
+						var time	=	new Date
+						var houra	=	time.getHours()
+
+					if (String(month).length == 1) {
+						month = '0' + month;
+					}
+				
+					if (String(date).length == 1) {
+						date = '0' + date;
+					}    
+					document.forms[0].deadline_translator.value = year + '-' + month + '-' + date + ' '+ houra + ':00:00';
+
+				}
+				calendar3 = new dynCalendar('calendar3', 'exampleCallback_ISO3');
+				calendar3.setYearComboRange(1);
+				calendar3.setMonthCombo(true);
+				calendar3.setYearCombo(true);
+				//-->
+			</script>
+
+			<? GenerateInputTag("deadline_translator","Deadline for translator");
+			
+			$TranslatorPaymentStatusCheckBox = array("translator_paid" => "Check here if the money were sent to worker");
+			GenerateCheckBox($TranslatorPaymentStatusCheckBox,"","","style='width:auto;'");
+			
+			
+			?>
+			</div>
+
+<!-- Выбор проверяльщика -->
+
+ 		<br><br><select name="proofreader_id">
+		<option value="0">Assign proofreader...</option>
+		<?
+
+		$res = mysql_query("select * from `translators` /* WHERE `language_pair` = $f[language_pair] */ ORDER BY `lastname`");
+		while($col = mysql_fetch_array($res))
+			{
+				echo "\t\t\t<option value=".$col['id']."";
+				select('proofreader_id', $col['id']);
+				echo ">$col[lastname] $col[firstname]</option>\n";
+			}
+
+		?>
+		</select> &nbsp; Select proofreader 
+
+			<br><? 
+
+						
+			GenerateInputTag("ppwp","Proofreader's price");
+	
+			?>
+
+			<div class="calendar">
+			<script language="JavaScript" type="text/javascript">
+				<!--
+				/**
+				* Example callback function
+				*/
+				function exampleCallback_ISO4(date, month, year)
+				{
+
+
+						var time	=	new Date
+						var houra	=	time.getHours()
+
+					if (String(month).length == 1) {
+						month = '0' + month;
+					}
+				
+					if (String(date).length == 1) {
+						date = '0' + date;
+					}    
+					document.forms[0].deadline_proofreader.value = year + '-' + month + '-' + date + ' '+ houra + ':00:00';
+
+				}
+
+				calendar4 = new dynCalendar('calendar4', 'exampleCallback_ISO4');
+				calendar4.setYearComboRange(1);
+				calendar4.setMonthCombo(true);
+				calendar4.setYearCombo(true);
+
+
+				//-->
+			</script>
+			<? 
+			
+			$ProofreaderPaymentStatusCheckBox = array("proofreader_paid" => "Check here if the money were sent to worker");
+			GenerateInputTag("deadline_proofreader","Deadline for proofreader");
+			GenerateCheckBox($ProofreaderPaymentStatusCheckBox,"","","style='width:auto;'");
+
+			?>
+			</div>
+			</div>
+
+		<div class="divtabs" id="pane2">
+
+		<!-- Аттач исходных файлов -->
+		<h3 id="first"><a name="source"></a>Phase 1 - Source text:</h3>
+
+			<div style="padding: 0 0 5px 19px;" id="sourcefilesblock">
+				<? getRequestFiles($f['id']); ?>
+			</div>
+
+			<div id="uploadsourceform"><input type="file" name="uploadfile[1][1]"></div>
+			&nbsp; &nbsp; &nbsp; <span class="javascriptlink" onclick="ShowUploadForm('uploadsourceform','1')">Attach another file</span>
+
+ 			<br><br>  &nbsp; &nbsp; &nbsp;  or copy paste the source text: 
+			<span style="margin-left: 325px; display: <? echo $displayitwithsourcetext; ?>" class="javascriptlink" onClick="saveasfile('<? ifExistGetValue('id'); ?>');" title="Save the source text as a file">Attach the following text as file</span>
+			<br><? GenerateTextAreaTag("source_text"); ?>
+			<br><span style="margin-left: 513px; display: <? echo $displayitwithsourcetext; ?>" class="javascriptlink" onClick="countwordsandchars();" title="Count words & characters in the source text, if available">Count words & characters</span>
+
+		<!-- Аттач проверенных файлов -->
+
+		<h3><a name="translation"></a>Phase 2 - Proofreading:</h3>
+
+			<div style="padding: 0 0 5px 19px;">
+				<? getRequestFiles($f['id'], "2"); ?>
+			</div>
+
+			<div id="uploadproofreadingform"><input type="file" name="uploadfile[2][1]"></div>
+			&nbsp; &nbsp; &nbsp; <span class="javascriptlink" onclick="ShowUploadForm('uploadproofreadingform','2')">Attach another file</span>
+
+			<!-- <br>  &nbsp; &nbsp; &nbsp;  or copy paste the translated text: 
+			<br><? GenerateTextAreaTag("proofreading"); ?> -->
+
+
+		<!-- Аттач финала файла -->
+
+		<h3><a name="translation"></a>Phase 3 - Final Translation:</h3>
+
+			<div style="padding: 0 0 5px 19px;">
+				<? getRequestFiles($f['id'], "3"); ?>
+			</div>
+
+			<div id="uploadtranslationform"><input type="file" name="uploadfile[3][1]"></div>
+			&nbsp; &nbsp; &nbsp; <span class="javascriptlink" onclick="ShowUploadForm('uploadtranslationform','3')">Attach another file</span>
+
+		</div>
+		</div>
+</form>
+

@@ -1,0 +1,85 @@
+<? include "inc/header.html"; ?>
+
+<!-- Content -->
+<div class="content" id="<? echo $action; ?>">
+	<? if ($action=="default" && $section!=="default" && $section!=="settings") { 
+
+		if ($section=="requests") {
+
+			// Начало вывода блока фильтров
+			echo "
+
+			<div class='pagetypes'>
+				<span class='javascriptlink' onclick=toggleVisibilityV2('filters');toggleVisibilityV2('filtera'); ><B>Apply filter</B></span>
+
+				<div id='filters'> by project status: ";
+
+			// Список опций фильтра
+			if (!empty($status)) echo "<a href='$siteurl$section/'>All</a>";
+			else echo "<span class='current'>All</span>";
+
+			$ProjectStatuses = RunSelectFromTableQuery("status", "", $column="id,name,description");
+
+			// Получение массива с данными о файлах, прикрепленных к заказу
+			for ($i=0; $i < mysql_num_rows($ProjectStatuses); $i++)
+				
+				{
+
+					// Получаем массив с данными о прикрепленных файлах
+					$statusdetails = mysql_fetch_array($ProjectStatuses,MYSQL_ASSOC);
+
+					if ($status === $statusdetails['id']) echo "<span class='current'>$statusdetails[name]</span>"; 
+					else echo "<a href='$siteurl$section/?status_id=$statusdetails[id]'>$statusdetails[name]</a>";
+
+				};	// Конец for(...$data)
+
+		echo "</div>";
+
+/* area of the translation */
+
+		echo "<div id='filtera'><form method='get' action=''>by document type: <select name='area_id'><option value=''>All</option>";
+
+		$ProjectTypes = RunSelectFromTableQuery("rates", "ORDER BY `name` ASC", $column="id,name");
+
+		// Получение массива с данными о файлах, прикрепленных к заказу
+		for ($i=0; $i < mysql_num_rows($ProjectTypes); $i++)
+				
+				{	
+					// Получаем массив с данными о прикрепленных файлах
+					$RateTypeDetails = mysql_fetch_array($ProjectTypes,MYSQL_ASSOC);
+					
+					$selected = "";
+					if (@$_GET['area_id'] === $RateTypeDetails['id']) $selected = " selected"; 
+					echo "<option value='$RateTypeDetails[id]' $selected>$RateTypeDetails[name]</option>";
+
+				};	// Конец for(...$data)
+
+		echo "</select><input type='submit' value='go'></form></div>";
+
+/* area of the translation */
+		
+		echo "</div>";
+
+
+
+
+
+		}
+
+		if ($count > 0) { 
+			include "inc/paginator.html";
+			include "content/$section/$action.html"; 
+			
+			}
+
+			else echo "<div class='objectsnotfound'>No objects found with the filter</div>";
+		}
+
+		else include "content/$section/$action.html"; 
+
+		
+	?>
+</div>
+<!-- Content -->
+
+<? include "inc/footer.html"; ?>

@@ -1,0 +1,24 @@
+<? $f = mysql_fetch_array($res); ?>
+
+<form method="post" action="">
+ 
+		  <h3 id="first">Company's name & contact details</h3> 
+
+				<? 
+				GenerateInputTag("company_name","Organization/individual's name");
+				GenerateInputTag("siteurl","Website URL");
+				GenerateInputTag("admin_name","Name of the administrative person");
+				GenerateInputTag("email","Company's Email");
+				GenerateInputTag("mail_address","Mailing address");
+				GenerateInputTag("phone","Phone number");
+				GenerateInputTag("fax","Fax number"); 
+				?> 
+
+		  <h3>Other:</h3>
+
+					<? GenerateInputTag("itemsonpage","How many items must be shown per page") ?>
+
+			<br><input type="hidden" value="do_edit" name="action">
+			<input type="hidden" value="1" name="id">
+			<input type="submit" name="Submit" value="Save changes" class="sendrequest">
+</form>

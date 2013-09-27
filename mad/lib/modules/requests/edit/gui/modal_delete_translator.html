@@ -1,0 +1,21 @@
+<!-- modal dialog: assign translator -->
+<div id="delete_translator_modal">
+    <a id="closemodal" href="#">X</a>
+
+    <form action="" method="post">
+        <h4>Delete this translator</h4>
+
+        <p>Are you sure?</p>
+
+        <div class="modalcontrols">
+            <input type="submit" value="Delete"/>
+            <input type="reset" value="Cancel"/>
+        </div>
+
+        <input type="hidden" name="translator_del_id" value="" />
+        <input type="hidden" name="request_id" value="{request_id}" />
+        <input type="hidden" name="action" value="delete_translator" />
+
+    </form>
+
+</div>

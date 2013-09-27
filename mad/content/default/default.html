@@ -1,0 +1,75 @@
+<TABLE class="quick">
+<TR>
+	<TD width="33%" valign="top">
+
+		<h4>Quick search:</h4>
+
+		<form method="GET" action="requests/view" class="form<? echo $section; ?>">
+
+		<? GenerateInputTag("id","") ?>
+		<br>
+
+		<label for='requests'><input type='radio' id='requests' name='param' value="" onclick='changeFormAction("requests/view","id")' checked> &mdash; by project ID</label><br>
+		<label for='translators'><input type='radio' id='translators'  name='param' value="" onclick='changeFormAction("translators/","lastname")'> &mdash; by translator's last name</label><br>
+		<label for='customers'><input type='radio' id='customers' name='param' value="" onclick='changeFormAction("customers/","lastname")'> &mdash; by customer's last name</label><br>
+
+		<br><input type="submit" value="Search">
+		</form>
+
+
+
+	</td>
+	<TD valign="top">
+
+		<h4>Quick tasks:</h4>
+
+		<ul>
+
+		<li><a href="/mad/requests/add/" style='font-weight: bold; color: red;'> Add new request</a><br><br></li>
+		<li><a href="/mad/customers/add/"> Add new customer</a></li>
+		<li><a href="/mad/translators/add/"> Add new translator</a></li>
+		<li><a href="/mad/rates/add/"> Add new area/rate</a></li>
+		</ul>	
+
+		<h4>View requests by Status: </h4>
+
+		<ul>
+		<li><a href="/mad/requests/view/<? $PrId = RunQueryReturnDataArray ("requests",$more="LIMIT 0,1", "MAX(id) as id",$showsql="0"); echo $PrId['id']; ?>">The most recent one (<? echo $PrId['id']; ?>)</a></li>
+<br>
+		<li><a href="requests/">All</a></li> 
+		<li><a href="requests/?status_id=1">New</a></li>
+		<li><a href="requests/?status_id=2">Unpaid</a></li>
+		<li><a href="requests/?status_id=5">In Progress</a></li>
+		</ul>
+
+		<h4>This month (<? echo date("M"); ?>) birthdays: </h4>
+
+		<ul>
+		<? echo GenerateLinksList("translators","WHERE `birthdate` REGEXP '^....-" . date("m") . "-..$'",""); ?>
+		</ul>
+
+		<h4>Debts: </h4>
+
+
+		Customers owe us <a href='requests/?status_id=2'><B>$<? echo ProcessSQL("requests","WHERE `isprojectactive`= '1' AND (`status_id` = '2' OR `status_id` = '3') ","round(SUM(estimatedprice))");  ?></B></a><br>
+		We owe our translators <a href='requests/?translator_paid=0'><B>$<? echo ProcessSQL("requests","WHERE `isprojectactive`= '0' AND `status_id` = '10' AND `translator_paid` = '0' AND `translator_id` != '20'","round(SUM(ppwt*wordcount))");  ?></B></a>
+
+	
+	</TD>
+
+	<TD valign="top">
+
+
+
+		<h4>View requests by Area: </h4>
+
+		<ul>
+
+		<? echo GenerateLinksList("rates"); ?>
+
+		</ul>
+	
+	</TD>
+
+</TR>
+</TABLE>

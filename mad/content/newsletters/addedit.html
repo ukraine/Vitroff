@@ -1,0 +1,12 @@
+<form method="post" action="">
+
+      
+	<h3 id="first">Subject of the newsletter</h3>
+
+		<? GenerateInputTag("subject","Subject of the newsletter"); ?>
+
+	<h3>Content:</h3>
+
+			<? GenerateTextAreaTag("content");
+		include "inc/formend.html"; ?>
+</form>

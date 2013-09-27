@@ -1,0 +1,211 @@
+<h3>Quick stats: </h3>
+	<ul>
+
+		<li>Currently <B><? 
+
+		$numberOfOrders = GetTotalData('requests', "WHERE status_id='10'");
+		echo $numberOfOrders;
+		?></B> completed orders with total paid amount of <B class="square" id="blue">$<? echo ProcessSQL('requests', "WHERE status_id='10'", "SUM(amountpaid)"); ?></B></li>
+		<li>Excluding PayPal fee in <b>$<? 
+		echo ProcessSQL(
+
+		'requests', 
+		"WHERE status_id='10'", 
+		"ROUND(SUM(( amountpaid * 0.029 ) + 0.30 + 0.10),2)"); 
+
+		?></B>, translator & proofreaders payments in <B>$<? echo ProcessSQL('requests', 
+		
+		"WHERE status_id='10'", 
+		"ROUND(SUM((ppwt*wordcount) + (ppwp*wordcount)),2)"); 
+		
+		?></B> our net income &#151; 
+		<b class="square" id="red">$<? echo ProcessSQL(
+		
+		'requests', 
+		"WHERE status_id='10'", 
+		"(SUM(amountpaid) - ROUND(SUM(( amountpaid * 0.029 ) + 0.30 + 0.10),2)) - ROUND(SUM((ppwt*wordcount) + (ppwp*wordcount)),2)"); 
+		
+		?></B></li>
+		<li>Total amount of customers &#151; <B><? echo GetTotalData('customers', ""); ?></B>, translators &#151; <B><? echo GetTotalData('translators'); ?></B></li>
+		<li>Total word count &#151; <B><? echo ProcessSQL('requests', "WHERE amountpaid > 0", "SUM(wordcount)"); ?></B></li>
+	 
+	</ul>
+
+<h3>Financial stats: </h3>
+
+<h4>Billing stats since the system started, by years</h4>
+
+<p>Formula:  <span class="formula">
+
+<B>X</B> = <B>((A</B> <sub>Total amount received</sub> - <B>(B</B> <sub>PayPal fees</sub> <B>2.9%</B> x <B>A)</B> + <B>($0.30</B> <sub>PayPal fees</sub> x <B>E</B> <sub>Number of requests</sub><B>)))</B> - <B>(C</B> <sub>translator fee</sub> + <B>D</B> <sub>proofreader or editor fee</sub><B>)</B></span></p>
+
+<? // $initialIncome = array(11062.94,5325.04,8759.07,);?>
+
+	<TABLE width="850" class="stats">
+
+	<TR class="zagolovorv1 statTD">
+		<Td rowspan='2' width='40'>Year</Th>
+		<Td colspan='2' width='110' class='orders'>Orders</Td>
+		<Td colspan	='2' width='110' class='orders'>Total <br>Income</Td>
+		<Td colspan='3' class='fees'>Expenses</Td>
+		<Td rowspan='2' width='70'>Revenue <br>rate</Td>
+		<Td rowspan='2' width='70'>Net income <br>per order</Td>
+		<Td id="fin" class='net' rowspan='2' width='110'>Net income</Td>
+	</TR>
+
+	<tr class="zagolovorv1" id='bot'>
+		<Td class='orders' width='55'>Total</Td>
+		<Td class='orders' width='55'>Avg/m</Td>		
+		<Td class='orders' width='55'>Total</Td>
+		<Td class='orders' width='55'>Avg/m</Td>		
+		<Td class='fees' width='110'>PayPal fees</Td>
+		<Td class='fees' width='110'>Workers fees</Td>
+		<Td class='fees' width='110'>Total expenses</Td>
+	</tr>
+
+	<?
+	
+	for ($i=date('Y'); $i >= 2007; $i--) {
+
+	$forecast = "";
+	$months = "12";
+		
+		$result =  GetFinancialTotalForYear($i); 
+		$totalFees = $result['workerFees']+ $result['PayPalFees'];
+		if (date("Y") == $i) {
+			
+			$forecast = "($" . round(($result['NetAmount']/date("m")-1)*12,2) . ")";
+			$months = intval(date("m"));
+		}
+
+	echo "<TR class='columns1'>
+		<TD>$i</TD>
+		<TD class='received'><B>$result[NumberOfOrders]</B></TD>
+		<TD>" . round($result['NumberOfOrders']/$months,2) . "</TD>
+		<TD class='received'>$$result[totalAmountPaid]</TD>
+		<TD>$" . round($result['totalAmountPaid']/$months,2) . "</TD>
+		<TD class='fees'>$$result[PayPalFees]</TD>
+		<TD class='fees'>$$result[workerFees]</TD>
+		<TD class='fees'><B>$$totalFees</B></TD>
+		<TD class='ratio'><B>" . round($result['NetAmount']/$totalFees,2) . "</B></TD>
+		<TD class='ratio'><B>$" . round($result['NetAmount']/$result['NumberOfOrders'],2) . "</B></TD>
+		<TD class='net'><B>$$result[NetAmount]</B> <span title='Estimate by the end of the year'>$forecast</span></TD>
+	</TR>";
+
+			
+	}
+	?>
+
+
+
+
+	</TABLE>
+
+<h4>Billing stats for current year (<? echo date("Y"); ?>), by months</h4>
+
+<p>Formula:  <span class="formula">
+
+<B>X</B> = <B>((A</B> <sub>Total amount received</sub> - <B>(B</B> <sub>PayPal fees</sub> <B>2.9%</B> x <B>A)</B> + <B>($0.30</B> <sub>PayPal fees</sub> x <B>E</B> <sub>Number of requests</sub><B>)))</B> - <B>(C</B> <sub>translator fee</sub> + <B>D</B> <sub>proofreader or editor fee</sub><B>)</B></span></p>
+
+<? // $initialIncome = array(11062.94,5325.04,8759.07,);?>
+
+	<TABLE width="850" class="stats">
+
+	<TR class="zagolovorv1 statTD">
+		<Td rowspan='2' width='40'>Month</Th>
+		<Td rowspan='2' width='70'>Number <br>of orders</Td>
+		<Td rowspan='2' width='110'>Total <br>Income</Td>
+		<Td colspan='3' class='fees'>Expenses</Td>
+		<Td rowspan='2' width='70'>Revenue <br>rate</Td>
+		<Td rowspan='2' width='70'>Net income <br>per order</Td>
+		<Td id="fin" class='net' rowspan='2' width='110'>Net income</Td>
+	</TR>
+
+	<tr class="zagolovorv1" id='bot'>
+		<Td class='fees' width='110'>PayPal fees</Td>
+		<Td class='fees' width='110'>Workers fees</Td>
+		<Td class='fees' width='110'>Total expenses</Td>
+	</tr>
+
+	<? 
+	
+	for ($i=intval(date('m')); $i >= 1; $i--) {
+		
+		$result =  GetFinancialTotalForYear($i,"month"); 
+		$totalFees = $result['workerFees']+ $result['PayPalFees'];
+		// $TotalNetAmount = $TotalNetAmount + $result['NetAmount'];
+
+
+	echo "<TR class='columns1'>
+		<TD>$i</TD>
+		<TD><B>$result[NumberOfOrders]</B></TD>
+		<TD class='received'>$$result[totalAmountPaid]</TD>
+		<TD class='fees'>$$result[PayPalFees]</TD>
+		<TD class='fees'>$$result[workerFees]</TD>
+		<TD class='fees'><B>$$totalFees</B></TD>
+		<TD class='ratio'><B>" . round($result['NetAmount']/$totalFees,2) . "</B></TD>
+		<TD class='ratio'><B>$" . round($result['NetAmount']/$result['NumberOfOrders'],2) . "</B></TD>
+		<TD class='net'><B>$$result[NetAmount]</B></TD>
+	</TR>";
+
+			
+	}
+	?>
+
+
+
+
+	</TABLE>
+
+<h4>Current, min, max & averages</h4>
+
+<TABLE  width="500" class="stats">
+<TR>
+	<TD>All period</TD>
+	<TD>min</TD>
+	<TD>avg</TD>
+	<TD>max</TD>
+</TR>
+
+
+<tr>
+	<td>
+	Request price<br>
+	Translator PPW<br>
+	Proofreader PPW<br>
+	Customer PPW<br>
+	Word count<br>
+	</td>
+
+	<td>
+
+		<B>$<? echo ProcessSQL('requests', "WHERE amountpaid > 0", "ROUND(MIN(amountpaid),2)"); ?></B><br>
+		<B>$<? echo ProcessSQL('requests', "WHERE ppwt > 0", "ROUND(MIN(ppwt),4)"); ?></B><br>
+		<B>$<? echo ProcessSQL('requests', "WHERE ppwp > 0", "ROUND(MIN(ppwp),4)"); ?></B><br>
+		<B>$<? echo ProcessSQL('requests', "WHERE ppw > 0", "ROUND(MIN(ppw),4)"); ?></B><br>
+		<B><? echo ProcessSQL('requests', "", "ROUND(MIN(wordcount))"); ?></B><br>
+
+	</td>
+
+	<td>
+
+		<B>$<? echo ProcessSQL('requests', "WHERE amountpaid > 0", "ROUND(AVG(amountpaid),2)"); ?></B><br>
+		<B>$<? echo ProcessSQL('requests', "WHERE ppwt > 0", "ROUND(AVG(ppwt),4)"); ?></B><br>
+		<B>$<? echo ProcessSQL('requests', "WHERE ppwp > 0", "ROUND(AVG(ppwp),4)"); ?></B><br>
+		<B>$<? echo ProcessSQL('requests', "WHERE ppw > 0", "ROUND(AVG(ppw),4)"); ?></B><br>
+		<B><? echo ProcessSQL('requests', "", "ROUND(AVG(wordcount))"); ?></B><br>
+
+	</td>
+
+	<td>
+
+		<B>$<? echo ProcessSQL('requests', "", "ROUND(MAX(amountpaid),2)"); ?></B><br>
+		<B>$<? echo ProcessSQL('requests', "", "ROUND(MAX(ppwt),4)"); ?></B><br>
+		<B>$<? echo ProcessSQL('requests', "WHERE ppwt > 0", "ROUND(MAX(ppwt),4)"); ?></B><br>
+		<B>$<? echo ProcessSQL('requests', "", "ROUND(MAX(ppw),4)"); ?></B><br>
+		<B><? echo ProcessSQL('requests', "WHERE amountpaid > 0", "ROUND(MAX(wordcount))"); ?></B><br>
+
+	</td>
+
+</tr>
+</TABLE>

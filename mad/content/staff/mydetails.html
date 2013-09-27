@@ -1,0 +1,17 @@
+<form method="post" action="">
+ 
+		  <h3 id="first">My details:</h3> 
+          <? GenerateInputTag("firstname","First name");
+          GenerateInputTag("lastname","Last name");
+		  GenerateInputTag("position","Position"); ?>
+
+		  <br>
+		  <? GenerateInputTag("email","Email");
+		  GenerateInputTag("phone","Phone"); ?>
+
+
+			<br><input type="hidden" value="do_edit" name="action">
+			<input type="hidden" value="<? echo $_SESSION['staff_id']; ?>" name="id">
+			<input type="submit" name="Submit" value="Save changes" class="sendrequest">
+</form>
+

@@ -1,0 +1,164 @@
+<?
+
+$firstname	= getNameById($f['customer_id'],'customers','firstname');
+$lastname	= getNameById($f['customer_id'],'customers','lastname');
+
+?>
+
+<div style="position: relative; top: -30px; margin-left: 455px;">
+
+<a href="/mad/requests/closeproject/<? echo $f['id'] ?>" style='text-decoration: underline'>Close Project</a> &nbsp;
+<a href="/mad/requests/duplicate/<? echo $f['id'] ?>" style='text-decoration: underline'>Duplicate Project</a>
+
+</div>
+<div class="view">
+<table id="90">
+
+ <tr><td colspan="2" class="zagolovok">
+ <h3 id="first">ID <? echo "$f[id] &rarr; ";getLanguagePairById($f['language_pair']); echo $result; ?> (<? ifExistGetValue('wordcount'); ?> words) </h3></td>
+ </tr>
+
+  <tr>
+    <td class="column1">Invoice #
+    </td>
+    <td class='column2'><? echo $f['id']; ?> - <a href="../dlinvoice/<? echo $f['id']; ?>">download</a></td>
+  </tr>	
+
+
+  <tr>
+    <td class="column1">Status
+    </td>
+    <td class='column2'><? echo getNameById($f['status_id'],'status','name') ?></td>
+  </tr>	
+
+  <tr>
+    <td class="column1">Date received
+    </td>
+    <td class='column2'><? ifExistGetValue('registrationtime') ?></td>
+  </tr>	
+
+  <tr>
+    <td class="column1">Deadline
+    </td>
+    <td class='column2'><? ifExistGetValue('deadline');?></td>
+  </tr>
+
+  <tr>
+    <td class="column1">Customer
+    </td>
+    <td class='column2'><a href="<? echo "{$siteurl}customers/view/$f[customer_id]"; ?>" title="<?="$firstname $lastname"?>"><? echo limitVisiblePart("$firstname $lastname"); ?></a> (<a href="<? echo "{$siteurl}requests/?customer_id=$f[customer_id]"; ?>"><? echo GetTotalData('requests', "WHERE customer_id = $f[customer_id]"); ?></a>)
+  </td>
+  </tr>
+
+  <tr>
+    <td class="column1">Customer's project ID
+    </td>
+    <td class='column2'><? ifExistGetValue('customer_project_id');?></td>
+  </tr>
+
+<tr><td colspan="2"><h4>Billing</h4></td></tr>
+
+  <tr>
+    <td class="column1">Amount expected/paid</td>
+    <td class='column2'>$<? echo $f['wordcount']*$f['ppw'];?> / $<? ifExistGetValue('amountpaid');?></td>
+  </tr>
+
+  <tr>
+    <td class="column1">Price per word</td>
+    <td class='column2'>$<? echo round($f['amountpaid']/$f['wordcount'],4); ?></td>
+  </tr>
+
+<tr><td colspan="2"><h4>Assigned staff</h4></td></tr>
+	
+	<tr>
+		<td class="column1">Translator</td>
+		<td class='column2'><a href="<? echo "{$siteurl}translators/view/$f[translator_id]"; ?>"><? echo getNameById($f['translator_id'],'translators','firstname')." ".getNameById($f['translator_id'],'translators','lastname'); ?></a> ($<? echo round($f['wordcount']*$f['ppwt'],2); ?> / $<? ifExistGetValue('ppwt');?>)</td>
+	</tr>
+	
+	<tr>
+		<td class="column1">Proofreader</td>
+		<td class='column2'><a href="<? echo "{$siteurl}translators/view/$f[proofreader_id]"; ?>"><? echo getNameById($f['proofreader_id'],'translators','firstname')." ".getNameById($f['proofreader_id'],'translators','lastname'); ?></a> ($<? echo round($f['wordcount']*$f['ppwp'],2); ?>)</td>
+	</tr>
+
+<tr><td colspan="2"><h4>Translation details</h4></td></tr>
+
+	<tr>
+		<td class="column1">Area</td>
+		<td class='column2'><a href="/mad/requests/?area_id=<? echo $f['area_id']; ?>"><? echo getNameById($f['area_id'],'rates','name'); ?></a></td>
+	</tr>	
+
+	<tr>
+		<td class="column1">Words</td>
+		<td class='column2'><? ifExistGetValue('wordcount'); ?></td>
+	</tr>
+
+	<tr>
+		<td class="column1">Characters</td>
+		<td class='column2'><? ifExistGetValue('characters'); ?></td>
+	</tr>
+
+	<tr>
+		<td class="column1">Translation memory</td>
+		<td class='column2'><? ifExistGetValue('istranslationmemory',1); ?>&nbsp;</td>
+	</tr>
+
+	<tr>
+		<td class="column1">Additional instructions</td>
+		<td class='column2'><? ifExistGetValue('instructions'); ?>&nbsp;</td>
+	</tr>
+
+	<tr>
+		<td class="column1">Comments to the project</td>
+		<td class='column2'><? ifExistGetValue('comments'); ?>&nbsp;</td>
+	</tr>
+
+<tr><td colspan="2"><h4>Certification details</h4></td></tr>
+
+	<tr>
+		<td class="column1">Certification is required</td>
+		<td class='column2'><? ifExistGetValue('isnotarizationrequired',1); ?>&nbsp;</td>
+	</tr>
+
+	<tr>
+		<td class="column1">Notarization is required</td>
+		<td class='column2'><? ifExistGetValue('isnotarizationrequired',1); ?>&nbsp;</td>
+	</tr>
+
+	<tr>
+		<td class="column1">Scan is required</td>
+		<td class='column2'><? ifExistGetValue('isscanrequired',1); ?>&nbsp;</td>
+	</tr>
+
+	<tr>
+		<td class="column1">Express delivery is required</td>
+		<td class='column2'><? ifExistGetValue('isexpressmailrequired',1); ?>&nbsp;</td>
+	</tr>
+
+<? if (!empty($f['iscertificationrequired'])) { ?>
+
+	<tr>
+		<td class="column1">Actions:</td>
+		<td class='column2'><a href='../download?what=shipping_label&id=<? echo $f['id']; ?>' title='The label is based on the contact details of the customer'>Download shipping label</a></td>
+	</tr>
+
+<?	} ?>
+
+<tr><td colspan="2"><h4>Files: Source & translation</h4></td></tr>
+
+
+	<tr>
+		<td class="column1" valign="top">Source</td>
+		<td class='column2'><? getRequestFiles($f['id'], "1"); ?>
+		<span class="javascriptlink" onClick="showText('source_text')" id="source_text_a"><? echo limitVisiblePart(ifExistGetValue($f['source_text']),'75'); ?></span>
+		<span id='source_text' style='display:none;'><? echo nl2br($f['source_text']) ?></span></td>
+	</tr>
+
+	<tr>
+		<td class="column1" valign="top">Translation</td>
+		<td class='column2'><? getRequestFiles($f['id'], "3"); ?>
+		<span class="javascriptlink" onClick="showText('translation')" id="source_text_a"><? echo limitVisiblePart(ifExistGetValue($f['translation']),'75'); ?></span>
+		<span id='translation' style='display:none;'><? echo nl2br($f['translation']) ?></span></td>
+	</tr>
+
+</table>
+</div>

@@ -1,0 +1,39 @@
+	<table width="100%" border="0" cellspacing="0" cellpadding="0">
+		<tr class="zagolovorv1"> 
+				<td width="4%"  rowspan=2>¹</td>
+				<td width="22%" rowspan=2>Name</td>
+				<td width="14%" rowspan=2>Language Pair</td>
+				<td width="9%" rowspan=2>Orders</td>
+				<td width="9%" rowspan=2>Earnings</td>
+				<td width="20%" colspan=2 id="finita">Actions</td>
+		</tr>
+		<tr class="zagolovorv1">
+			<td width="8%" class="zagolovor">Edit</td>
+			<td width="8%" id="fin">Delete</td>
+		</tr>
+
+
+
+
+<?
+
+for ($i=0; $i < mysql_num_rows($res); $i++)
+	
+	{
+	$number = $i+$startobject;
+	$f = mysql_fetch_array($res);
+
+	echo
+	  "\t<tr" . PairedLineOrNot($number) . ">"
+	. "\n\t\t<td class='columns1' id='center'>$number</td>"
+	. "\n\t\t<td class='columns1' id='name'><span class=\"name\" ".BirthDateIsCurrentDate($f['birthdate'])."><a href='view/$f[id]'>$f[lastname] $f[firstname] $f[middlename]</a></span></td>"
+	. "\n\t\t<td class='columns1' id='90'>".getLanguagePairById($f['language_pair'])."</td>"
+	. "\n\t\t<td class='columns1' id='90'><a href='/mad/requests/?translator_id=$f[id]'>".GetTotalData("requests", "WHERE translator_id = $f[id] OR proofreader_id = $f[id]")."</a></td>"
+	. "\n\t\t<td class='columns1'>$" . ProcessSQL('requests', "WHERE translator_id = $f[id] OR proofreader_id = $f[id]", "ROUND(SUM(wordcount * ppwt),2)") . "</td>"
+	. "\n\t\t<td class='columns1'><a href='edit/$f[id]' class='edit'>Edit</a></td>"
+	. "\n\t\t<td class='columns1' id='end'><a href='delete/$f[id]' class='delete' onclick='return confirmDelete()'>Delete</a></td>"
+	. "\n\t</tr>\n";
+	}
+
+?>
+</table>

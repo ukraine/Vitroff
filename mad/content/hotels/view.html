@@ -1,0 +1,68 @@
+<form method="get" action="edit/<?=$id?>">
+<table width="400px" id="90" cellspacing=1 class="view">
+ 
+
+ <tr><td colspan="2"><h3 id="first"><? ifExistGetValue('lastname');?></B> <? ifExistGetValue('firstname'); ?> <? ifExistGetValue('middlename') ?></h3></td></tr>
+  <tr>
+  <td width='45%'></td>
+  <td class="column1"></td>
+  </tr>
+
+  <!-- <tr>
+    <td class="column1">Language Pair<br>
+    </td>
+    <td class='column2'><? getLanguagePairById($f[language_pair]); echo $result; ?></td>
+  </tr>
+  
+  <tr>
+    <td class="column1">Birthdate<br>
+    </td>
+    <td class='column2'><? ifExistGetValue('birthdate') ?></td>
+  </tr>
+
+<tr><td colspan="2"><br><b>Contact details</b><br><br></td></tr> -->
+	
+	<tr>
+		<td class="column1">Email</td>
+		<td class='column2'><? ifExistGetValue('email') ?></td>
+	</tr>
+	
+	<tr>
+		<td class="column1">Home phone</td>
+		<td class='column2'><a href="skype:<? ifExistGetValue('phone') ?>"><img src="/mad/img/icons/call.gif"></a> <? ifExistGetValue('phone') ?></td>
+	</tr>
+
+	<tr>
+		<td class="column1">Cell phone</td>
+		<td class='column2'><a href="skype:<? ifExistGetValue('cellphone') ?>"><img src="/mad/img/icons/call.gif"></a> <? ifExistGetValue('cellphone') ?></td>
+	</tr>
+
+    <tr>
+		<td class="column1">Fax phone</td>
+		<td class='column2'><? ifExistGetValue('fax') ?></td>
+	</tr>
+
+	<!-- <tr>
+		<td class="column1">Address</td>
+		<td class='column2'><? ifExistGetValue('street'); ?>,<br><? ifExistGetValue('city') ?>,  <? ifExistGetValue('state'); ?><br><? ifExistGetValue('country') ?> <? ifExistGetValue('zip') ?></td> 
+	</tr> -->
+
+<tr><td colspan="2"><br><b>Stats info</b><br><br></td></tr>
+
+  <tr>
+    <td class="column1">Total orders</td>
+    <td class='column2' id="sky"><b><a href="<? echo "{$siteurl}requests/?customer_id=$f[id]"; ?>"><? echo GetTotalData('requests', "WHERE customer_id = $f[id]"); ?></a></b></td>
+  </tr>
+	
+  <tr>
+    <td class="column1">Total amount paid</td>
+    <td class='column2' id="sky"><b>$<? echo ProcessSQL('requests', "WHERE customer_id = $f[id]", "SUM(amountpaid)"); ?></b></td>
+  </tr>
+
+  <tr>
+    <td class="column1">Total words count</td>
+    <td class='column2' id="sky"><b><? echo ProcessSQL('requests', "WHERE customer_id = $f[id]", "SUM(wordcount)"); ?></b></td>
+  </tr>
+
+</table>
+</form>

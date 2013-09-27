@@ -1,0 +1,79 @@
+<table width="100%" class="paginator">
+	
+	<tr>
+	<td colspan="3">
+	</td>
+	</tr>
+	<tr>
+		<td width="33%">
+			<? echo "Showing <B>$startobject</B> to <B>$endobject</B> records from <B>$count</B>"; ?></td>
+		<td width="33%">
+		
+	</td>
+		<td width="33%" align="right" class="paging">
+
+<?
+
+
+/* if ($totalpages > 1) {
+
+		for($i = 0; $i < $totalpages; $i++){
+		
+		$pagenumber = $i+1;
+
+			if($i == $page)	$paging .= "<span id='currentpage'>$pagenumber</span> "; 
+			else $paging .= "<a href='{$url}page=$i'>$pagenumber</a> "; 
+
+		}
+
+	echo "Page: ". $paging;
+
+} */
+
+
+	// Инициаилизация
+	$rightarrowlink = $leftarrowlink = $realnav = "";
+
+	// Вычисление ключа-индекса текущей фотки
+	$currentPictureKey = intval($page);
+
+	// Вычисление ключа-индекса следующей фотки
+	$nextPictureKey = $currentPictureKey+1;
+
+	// Вычисление ключа-индекса предыдущей фотки
+	$prevPictureKey = $currentPictureKey-1;
+
+
+if($currentPictureKey+1 > SHOWEACHSIDE) $realnav = " ... ";
+
+$page=1;
+
+for($y=1;$y<$totalpages+1;$y+=1)
+{
+
+		$class=($y==$currentPictureKey)?"id='currentpage'":"";
+
+		if(($y > ($currentPictureKey - SHOWEACHSIDE)) && ($y < ($currentPictureKey + SHOWEACHSIDE)))	{
+
+		$realnav .= "\t<a $class href='{$url}page=$y'>$page</a>";
+
+		}
+
+		$page++;
+}
+
+if(($currentPictureKey+SHOWEACHSIDE)<$totalpages) $realnav .= " ... ";
+
+	if ($nextPictureKey !== $totalpages+1) $rightarrowlink = "<a href='{$url}page=$nextPictureKey' class='arr'>&rarr;</a>";
+	if ($prevPictureKey != "0") $leftarrowlink = "<a href='{$url}page=$prevPictureKey' class='arr'>&larr;</a>"; 
+
+	$navigation = "$leftarrowlink $realnav $rightarrowlink";
+
+	// Вывод навигации, а затем самой фотографии
+	echo $navigation;
+
+?>
+
+	</td>
+	</tr>
+</table>

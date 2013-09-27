@@ -1,0 +1,24 @@
+<form method="post" action="">
+        
+		<h3 id="first">Contact details:</h3>
+				<input type="text" name="name"	value="<? ifExistGetValue('name'); ?>"> &nbsp; Organization name <span id="grey"></span>
+			<br><input type="text" name="entity_type"	value="<? ifExistGetValue('entity_type'); ?>"> &nbsp; Entity type
+			<br><input type="text" name="language_versions"	value="<? ifExistGetValue('language_versions'); ?>"> &nbsp; Language versions
+			<br><input type="text" name="country"	value="<? ifExistGetValue('country'); ?>"> &nbsp; Country
+			<br><input type="text" name="url"	value="<? ifExistGetValue('url'); ?>"> &nbsp; Web-Site
+
+
+			<br><input type="text" name="email"		value="<? ifExistGetValue('email'); ?>"> &nbsp; Email
+			<br><input type="text" name="phone"		value="<? ifExistGetValue('phone'); ?>"> &nbsp; Phone
+			<br><input type="text" name="fax"		value="<? ifExistGetValue('fax'); ?>"> &nbsp; Fax
+
+			<br><input type="text" name="contact_name"	value="<? ifExistGetValue('contact_name'); ?>"> &nbsp; Contact name 
+
+
+			<br>
+			<input type="hidden"	name="id"		value="<? echo $_GET['id']?>">
+			<input type="hidden"	name="action"	value="do_<? echo strtolower($_REQUEST['action']); ?>">
+			<input type="submit"	name="Submit"	value="<? echo strtoupper($_REQUEST['action']); ?>" class="sendrequest">
+
+</form>
+

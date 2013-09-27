@@ -1,0 +1,70 @@
+<script language="javascript" type="text/javascript" src="/mad/lib/mm.js"></script>
+
+	<table width="750px" border="0" cellspacing="0" cellpadding="0" class="hover">
+		<tr> 
+				<td width="4%"  class="zagolovor" rowspan=2 style='text-align:center;'>¹</td>
+				<td width="35%" class="zagolovor" rowspan=2>Name</td>
+				<td width="12%" class="zagolovor" rowspan=2>Phones / Fax</td>
+				<td width="6%" class="zagolovor" rowspan=2>LVer</td>
+				<td width="8%" class="zagolovor" rowspan=2>Sent</td>
+				<td width="10%" class="zagolovor" rowspan=2>Read</td>
+				<td width="20%" class="zagolovor" colspan=2 id="finita">Actions</td>
+		</tr>
+		<tr>
+			<td width="10%" class="zagolovor">Edit</td>
+			<td width="10%" class="zagolovor" id="fin">Delete</td>
+		</tr>
+
+
+<?
+
+for ($i=0; $i < mysql_num_rows($res); $i++)
+	
+	{
+	$number = $i+1;
+
+	$pair="class='pair'";
+	if ($number%2 !== 0) $pair="";
+
+	echo "\t<tr $pair>";
+	
+	$f = mysql_fetch_array($res);
+
+	$webmoney = "webmoney";
+	$yandexmo = "yandexmo";
+	$privatmo = "privatmo";
+	$paypalmo = "paypalmo";
+	$homephon = "homephon";
+	$cellphon = "cellphon";
+	$faxphone = "faxphone";
+	$emailron = "emailron";
+
+	if (empty($f['webmoney']))		$webmoney .= "_non";
+	if (empty($f['yandexmoney']))	$yandexmo .= "_non";
+	if (empty($f['privat24']))		$privatmo .= "_non";
+	if (empty($f['paypal']))		$paypalmo .= "_non";
+	if (empty($f['phone']))			$homephon .= "_non";
+	if (empty($f['cellphone']))		$cellphon .= "_non";
+	if (empty($f['fax']))			$faxphone .= "_non";
+	if (empty($f['email']))			$emailron .= "_non";
+
+	$url = limitVisiblePart($f['url'], 48);
+
+
+	echo "\n\t\t<td class='columns1' id='center'>$number</td>";
+	echo "\n\t\t<td class='columns1' id='name'><span class=\"name\">$f[email] - $f[contact_name]</span>
+	
+<div class='url'><a href='$f[url]'>$url</a> &nbsp;<a href='$f[url]' target='_blank'><img src='../img/icons/popup.gif' border='0'></a></div> $f[phone]</td>";
+	echo "\n\t\t<td class='columns1'><img src='/mad/img/icons/$emailron.gif' title='$f[email]'> <img src='/mad/img/icons/$homephon.gif' title='$f[phone]'> <img src='/mad/img/icons/$cellphon.gif' title='$f[cellphone]'> <img src='/mad/img/icons/$faxphone.gif' title='$f[fax]'></td>";
+	
+	echo "\n\t\t<td class='columns1'>$f[language_versions]</td>";	
+	echo "\n\t\t<td class='columns1'>";echo "<div id='status{$f[id]}'></div>"; include "inc/sentorno.html"; echo "</td>";
+	echo "\n\t\t<td class='columns1'>$f[read_count]</td>";
+	echo "\n\t\t<td class='columns1'><a href='edit/$f[id]' class='edit'>Edit</a></td>";
+	echo "\n\t\t<td class='columns1' id='end'><a href='delete/$f[id]' class='delete' onclick='return confirmDelete()'>Delete</a></td>";
+
+	echo "\n\t</tr>\n";
+	}
+
+?>
+</table>

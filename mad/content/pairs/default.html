@@ -1,0 +1,49 @@
+	<table width="100%" border="0" cellspacing="0" cellpadding="0">
+		<tr class="zagolovorv1"> 
+				<td width="4%" rowspan=2>#</td>
+				<td width="14%" rowspan=2>Pair</td>
+				<td width="15%" colspan="2" id="finita">Averages</td>
+				<td width="6%" rowspan=2>Words</td>
+				<td width="6%" rowspan=2>Requests</td>
+				<td width="6%" rowspan=2>Translators</td>
+				<td width="6%" rowspan=2>$ Earned</td>
+				<td width="20%" colspan=2 id="finita">Actions</td>
+		</tr>
+
+
+		<tr class="zagolovorv1">
+				<td width="5%" >PPWT</td>
+				<td width="5%" >PPWP</td>
+				<td width="10%" >Edit</td>
+				<td width="10%" id="fin">Delete</td>
+		</tr>
+
+
+<?
+
+for ($i=0; $i < mysql_num_rows($res); $i++)
+	
+	{
+	$number = $i+$startobject;
+	
+	$f = mysql_fetch_array($res);
+	$source = GetNameById ($f['source'], 'languages','name');
+	$target = GetNameById ($f['target'], 'languages','name');
+
+	echo
+	  "\t<tr" . PairedLineOrNot($number) . ">"
+	. "\n\t\t<td class='columns1' id='center'>$number</td>"
+	. "\n\t\t<td class='columns1' id='name'><a href='view/$f[id]'>$source &raquo; $target</a></td>"
+	. "\n\t\t<td class='columns1'>" . ProcessSQL('requests', "WHERE language_pair = $f[id]", "ROUND(AVG(ppwt),2)") . "</td>"
+	. "\n\t\t<td class='columns1'>" . ProcessSQL('requests', "WHERE language_pair = $f[id]", "ROUND(AVG(ppwp),2)") . "</td>"
+	. "\n\t\t<td class='columns1'>" . ProcessSQL('requests', "WHERE language_pair = $f[id]", "SUM(wordcount)") . "</td>"
+	. "\n\t\t<td class='columns1'><a href='/mad/requests/?language_pair=$f[id]'>" . ProcessSQL('requests', "WHERE language_pair = $f[id]", "count(*)") . "</a></td>"
+	. "\n\t\t<td class='columns1'><a href='/mad/translators/?language_pair=$f[id]'>" . ProcessSQL('translators', "WHERE language_pair = $f[id]", "count(*)") . "</a></td>"
+	. "\n\t\t<td class='columns1'>$" . ProcessSQL('requests', "WHERE language_pair = $f[id]", "SUM(amountpaid)") . "</td>"
+	. "\n\t\t<td class='columns1'><a href='edit/$f[id]' class='edit'>Edit</a></td>"
+	. "\n\t\t<td class='columns1' id='end'><a href='delete/$f[id]' class='delete' onclick='return confirmDelete()'>Delete</a></td>"
+	. "\n\t</tr>\n";
+	}
+
+?>
+</table>

@@ -1,0 +1,106 @@
+<div class="view">
+<table id="90">
+ 
+
+ <tr><td colspan="2"class="zagolovok"><h3 id="first"><? ifExistGetValue('lastname');?></B> <? ifExistGetValue('firstname'); ?> <? ifExistGetValue('middlename') ?></h3></td></tr>
+
+	<tr>
+		<td class="column1">Customer since</td>
+		<td class='column2'><? ifExistGetValue('registrationtime') ?></td>
+	</tr>
+
+<tr><td colspan="2"><h4>Contacts</h4></td></tr>
+	<tr>
+		<td class="column1">Email</td>
+		<td class='column2'><? ifExistGetValue('email') ?></td>
+	</tr>
+	
+	<tr>
+		<td class="column1">Home phone</td>
+		<td class='column2'><!-- <a href="skype:<? ifExistGetValue('phone') ?>"><img src="/mad/img/icons/call.gif"></a> --> <? ifExistGetValue('phone') ?></td>
+	</tr>
+
+	<tr>
+		<td class="column1">Cell phone</td>
+		<td class='column2'><!-- <a href="skype:<? ifExistGetValue('cellphone') ?>"><img src="/mad/img/icons/call.gif"></a>  --><? ifExistGetValue('cellphone') ?></td>
+	</tr>
+
+    <tr>
+		<td class="column1">Work phone</td>
+		<td class='column2'><? ifExistGetValue('workphone') ?></td>
+	</tr>
+
+    <tr>
+		<td class="column1">Fax phone</td>
+		<td class='column2'><? ifExistGetValue('fax') ?></td>
+	</tr>
+
+<tr><td colspan="2"><h4>Billing info:</h4></td></tr>
+
+  <tr>
+    <td class="column1">Preferred payment method</td>
+    <td class='column2'><a href="<? echo getNameById($f['payment_prefs_id'], "paymenttypes", "url") ?>" target="_blank"><? echo getNameById($f['payment_prefs_id'], "paymenttypes", "name") ?></a></td>
+  </tr>
+
+	<!-- <tr>
+		<td class="column1">Address</td>
+		<td class='column2'><? ifExistGetValue('street'); ?>,<br><? ifExistGetValue('city') ?>,  <? ifExistGetValue('state'); ?><br><? ifExistGetValue('country') ?> <? ifExistGetValue('zip') ?></td> 
+	</tr> -->
+
+
+<tr><td colspan="2"><h4>General stats</h4></td></tr>
+
+  <tr>
+    <td class="column1">Total orders</td>
+    <td class='column2'><b><a href="<? echo "{$siteurl}requests/?customer_id=$f[id]"; ?>"><? echo GetTotalData('requests', "WHERE customer_id = $f[id]"); ?></a></b></td>
+  </tr>
+	
+  <tr>
+    <td class="column1">Total amount paid</td>
+    <td class='column2'><b>$<? echo ProcessSQL('requests', "WHERE customer_id = $f[id]", "SUM(amountpaid)"); ?></b></td>
+  </tr>
+
+  <tr>
+    <td class="column1">Total words count</td>
+    <td class='column2'><b><? echo ProcessSQL('requests', "WHERE customer_id = $f[id]", "SUM(wordcount)"); ?></b></td>
+  </tr>
+
+  <tr>
+    <td class="column1">Last request details</td>
+    <td class="column2">
+		<span class="javascriptlink" onClick="showText('lastrequest')" id="lastrequest_a">Reveal</span>
+		<span id='lastrequest' style='display:none;'>
+
+	Project ID: 
+	<a href="/mad/requests/view/<? echo ProcessSQL('requests', "WHERE customer_id = $f[id] ORDER BY `deadline` desc LIMIT 0,1", "id"); ?>">	<B><? echo ProcessSQL('requests', "WHERE customer_id = $f[id] ORDER BY `deadline` desc LIMIT 0,1", "id"); ?></B></a>,  Total price: 
+
+	<B>$<? echo round(ProcessSQL('requests', "WHERE customer_id = $f[id] ORDER BY `deadline` desc LIMIT 0,1", "amountpaid"),2); ?></B>,  
+	Price per word: <B>$<? echo ProcessSQL('requests', "WHERE customer_id = $f[id] ORDER BY `deadline` desc LIMIT 0,1", "amountpaid/wordcount"); ?></B>,  
+	Request price: <B><? echo ProcessSQL('requests', "WHERE customer_id = $f[id] ORDER BY `deadline` desc LIMIT 0,1", "wordcount"); ?></B>
+	</span>
+	
+	</td>
+  </tr>
+
+
+<tr><td colspan="2"><h4>Average statistics</h4></td></tr>
+
+  <tr>
+    <td class="column1">Average price per word</td>
+    <td class='column2'>$<? echo round(ProcessSQL('requests', "WHERE customer_id = $f[id]", "SUM(amountpaid)")/ProcessSQL('requests', "WHERE customer_id = $f[id]", "SUM(wordcount)"),4); ?></td>
+  </tr>
+
+  <tr>
+    <td class="column1">Average request price</td>
+    <td class='column2'>$<? echo round(ProcessSQL('requests', "WHERE customer_id = $f[id]", "SUM(amountpaid)")/GetTotalData('requests', "WHERE customer_id = $f[id]"),2); ?></td>
+  </tr>
+
+  <tr>
+    <td class="column1">Average word count</td>
+    <td class='column2'><? echo ceil(ProcessSQL('requests', "WHERE customer_id = $f[id]", "SUM(wordcount)")/GetTotalData('requests', "WHERE customer_id = $f[id]")); ?></td>
+  </tr>
+
+
+
+</table>
+</div>

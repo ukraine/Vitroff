@@ -1,0 +1,23 @@
+<form method="post" action="">
+ 
+	<h3 id="first">Bank Account details:</h3>
+
+			<? 
+
+		GenerateInputTag("beneficiary","Beneficiary name"); 
+		GenerateInputTag("benaccount","Beneficiary account"); 
+		GenerateInputTag("benbank","Bank of beneficiary");
+		GenerateInputTag("routenumber","Routing number");
+		GenerateInputTag("swift","Swift code");
+		GenerateInputTag("interbank","Intermediary bank"); 
+		GenerateInputTag("corracount","Correspondent account");
+		GenerateInputTag("wire_transfer_fee","Wire Transfer Fee");
+		GenerateInputTag("currency","Default currency");
+
+			?>
+
+			<br><input type="hidden" value="do_edit" name="action">
+			<input type="hidden" value="1" name="id">
+			<input type="submit" value="Save changes">
+
+</form>

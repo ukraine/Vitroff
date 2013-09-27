@@ -1,0 +1,230 @@
+<?
+
+$paymentUrl = getNameById($f['payment_prefs_id'], "paymenttypes", "url");
+$paymentOptionName=getNameById($f['payment_prefs_id'], "paymenttypes", "name");
+$totalOrders = GetTotalData('requests', "WHERE translator_id = $f[id] OR proofreader_id = $f[id]");
+
+$amountCalculated = ProcessSQL('requests', "WHERE translator_id = $f[id] AND `ppwt` > '0'", "ROUND(SUM(wordcount * ppwt),2)") 
++ ProcessSQL('requests', "WHERE proofreader_id = $f[id]  AND `ppwt` > '0'", "ROUND(SUM(wordcount * ppwp),2)"); 
+
+$amountPaid = ProcessSQL('requests', "WHERE translator_id = $f[id] AND `translator_paid` = '1'", "ROUND(SUM(wordcount * ppwt),2)")
++ ProcessSQL('requests', "WHERE proofreader_id = $f[id] AND `proofreader_paid` = '1'", "ROUND(SUM(wordcount * ppwp),2)");
+
+$inProgress = ProcessSQL('requests', "WHERE proofreader_id = $f[id] AND `proofreader_paid` = '0' AND `status_id` = '2'", "ROUND(SUM(wordcount * ppwp),2)")
++ ProcessSQL('requests', "WHERE translator_id = $f[id] AND `translator_paid` = '0' AND `status_id` = '2'", "ROUND(SUM(wordcount * ppwt),2)");
+
+$totalDebt = ($amountPaid - $amountCalculated);
+
+?>
+
+<div class="view">
+<table id="90">
+  <tr>
+	<td colspan="2" class="zagolovok">
+	<h3 id="first"><? ifExistGetValue('firstname'); ?> <? ifExistGetValue('middlename'); ?> <? ifExistGetValue('lastname') ?></h3>
+	</td>
+</tr>
+
+	<tr>
+		<td class="column1">Translator since</td>
+		<td class='column2'><? ifExistGetValue('registrationtime') ?></td>
+	</tr>
+
+  <tr>
+    <td class="column1">Language Pair</td>
+    <td class='column2'><? getLanguagePairById($f['language_pair']); echo $result; ?></td>
+  </tr>
+  
+  <tr>
+    <td class="column1">Birthdate
+    </td>
+    <td class='column2'><? ifExistGetValue('birthdate') ?></td>
+  </tr>
+
+<tr><td colspan="2"><h4>Contact details</h4></td></tr>
+	
+	<tr>
+		<td class="column1">Email</td>
+		<td class='column2'><? ifExistGetValue('email') ?></td>
+	</tr>
+	
+	<tr>
+		<td class="column1">Home phone</td>
+		<td class='column2'><? ifExistGetValue('phone') ?></td>
+	</tr>
+
+	<tr>
+		<td class="column1">Cell phone</td>
+		<td class='column2'><? ifExistGetValue('cellphone') ?>
+		<span style="float: right;">
+		SMS: 
+		
+		<a href="<? echo $SMSPortals['mts']; ?><? ifExistGetValue('cellphone') ?>" target="_blank"><img src="/mad/img/icons/mts_icon.gif" alt="MTS"></a>
+		<a href="<? echo $SMSPortals['mtsu']; ?><? ifExistGetValue('cellphone') ?>" target="_blank"><img src="/mad/img/icons/mts_ua_icon.gif" alt="MTS Ukraine"></a>
+		<a href="<? echo $SMSPortals['beeline']; ?>?phone=<? ifExistGetValue('cellphone') ?>" target="_blank"><img src="/mad/img/icons/beeline_icon.gif" alt="BeeLine"></a> 
+		<a href="<? echo $SMSPortals['beeline_ua']; ?>?phone=<? ifExistGetValue('cellphone') ?>" target="_blank"><img src="/mad/img/icons/beeline_ua_icon.gif" alt="BeeLine Ukraine"></a> 
+		<a href="<? echo $SMSPortals['megafon']; ?><? ifExistGetValue('cellphone') ?>" target="_blank"><img src="/mad/img/icons/megafon_icon.gif" alt="Megafon"></a>
+		<a href="<? echo $SMSPortals['kyivstar']; ?>phone=<? ifExistGetValue('cellphone') ?>" target="_blank"><img src="/mad/img/icons/ks_icon.gif" alt="Kyivstar"></a>
+		<a href="<? echo $SMSPortals['life']; ?>phone=<? ifExistGetValue('cellphone') ?>" target="_blank"><img src="/mad/img/icons/life_icon.gif" alt="Life"></a>
+		<a href="<? echo $SMSPortals['tele2spb']; ?>phone=<? ifExistGetValue('cellphone') ?>" target="_blank"><img src="/mad/img/icons/tele2_icon.gif" alt="Tele2 Spb"></a>	
+		</span>
+
+
+		</td>
+	</tr>
+
+    <tr>
+		<td class="column1">Fax phone</td>
+		<td class='column2'><? ifExistGetValue('fax') ?></td>
+	</tr>
+
+	<tr>
+		<td class="column1">Address</td>
+		<td class='column2'><? ifExistGetValue('street'); ?>
+		<br><? ifExistGetValue('city') ?>
+		<br><? ifExistGetValue('state'); ?>
+		<br><? ifExistGetValue('country') ?> <? ifExistGetValue('zip') ?></td>
+	</tr>
+
+<tr><td colspan="2"><h4>Instant messengers</h4></td></tr>
+
+
+	<tr>
+		<td class="column1">ICQ</td>
+		<td class='column2'><a href="http://wwp.icq.com/scripts/search.dll?to=<? ifExistGetValue('icq') ?>" target="_blank"><? ifExistGetValue('icq') ?></a></td>
+	</tr>
+
+	<tr>
+		<td class="column1">Skype</td>
+		<td class='column2'><a href="skype:<? ifExistGetValue('skype') ?>?call" onclick="return skypeCheck();"><? ifExistGetValue('skype') ?></a></td>
+	</tr>
+
+	<tr>
+		<td class="column1">Gtalk</td>
+		<td class='column2'><? ifExistGetValue('gtalk') ?></td>
+	</tr>
+
+	<tr>
+		<td class="column1">Comment</td>
+		<td class='column2'><? echo nl2br(ifExistGetValue2('comment')) ?></td>
+	</tr>
+
+<tr><td colspan="2"><h4>Prices & payment</h4></td></tr>
+
+	<tr>
+	<td class="column1">Price per word, USD</td>
+	<td class='column2'><B><? echo $f['ppw']; ?></B></td>
+	</tr>
+    
+  <tr>
+    <td class="column1">Price per proofread word, USD</td>
+    <td class='column2'><b><? echo $f['pppw'] ; ?></b></td>
+  </tr>
+
+  <tr>
+    <td class="column1">Preferred payment method</td>
+    <td class='column2'><a href="<? echo $paymentUrl ?>" target="_blank"><? echo $paymentOptionName; ?></a></td>
+  </tr>
+
+  <tr>
+    <td class="column1">Webmoney Z (USD)</td>
+    <td class='column2'><a target='_blank' href='<? echo $paymentUrl; echo ifExistGetValue('webmoney') ?>&Amount=<? echo $totalDebt; ?>'><? ifExistGetValue('webmoney') ?></a></td>
+  </tr>
+
+  <tr>
+    <td class="column1">Webmoney R (RUR)</td>
+    <td class='column2'><? ifExistGetValue('webmoneyr') ?></td>
+  </tr>
+
+  <tr>
+    <td class="column1">YandexMoney</td>
+    <td class='column2'><? ifExistGetValue('yandexmoney') ?></td>
+  </tr>
+
+  <tr>
+    <td class="column1">Privat24 (credit card number)</td>
+    <td class='column2'><? ifExistGetValue('privat24') ?></td>
+  </tr>
+
+  <tr>
+    <td class="column1">PayPal</td>
+    <td class='column2'><? ifExistGetValue('paypal') ?></td>
+  </tr>
+
+<tr><td colspan="2"><h4>General stats</h4></td></tr>
+
+  <tr>
+    <td class="column1">Total orders</td>
+    <td class="column2"><a href='<? echo "{$siteurl}requests/?translator_id=$f[id]" ?>'><? echo $totalOrders; ?></b></a></td>
+  </tr>
+	
+  <tr>
+    <td class="column1">Total amount calculated</td>
+    <td class="column2"><b>$<? echo $amountCalculated; ?></b></td>
+  </tr>
+
+  <tr>
+    <td class="column1">Total amount paid</td>
+    <td class="column2"><b>$<? echo $amountPaid; ?></b></td>
+  </tr>
+
+  <tr>
+    <td class="column1">Total debt</td>
+    <td class="column2"><b>$<? echo $totalDebt; ?></b></td>
+  </tr>
+
+  <tr>
+    <td class="column1">Total words count</td>
+    <td class="column2"><b><? echo ProcessSQL('requests', "WHERE translator_id = $f[id] OR proofreader_id = $f[id]", "SUM(wordcount)"); ?></b></td>
+  </tr>
+
+  <tr>
+    <td class="column1">Last request details</td>
+    <td class="column2">
+		<span class="javascriptlink" onClick="showText('lastrequest')" id="lastrequest_a">Reveal</span>
+		<span id='lastrequest' style='display:none;'>
+
+	Project ID: 
+	<a href="/mad/requests/view/<? echo ProcessSQL('requests', "WHERE translator_id = $f[id] OR proofreader_id = $f[id] ORDER BY `deadline` desc LIMIT 0,1", "id"); ?>">	<B><? echo ProcessSQL('requests', "WHERE translator_id = $f[id] OR proofreader_id = $f[id] ORDER BY `deadline` desc LIMIT 0,1", "id"); ?></B></a>,  Total price: 
+
+	<B>$<? echo round(ProcessSQL('requests', "WHERE translator_id = $f[id] OR proofreader_id = $f[id] ORDER BY `deadline` desc LIMIT 0,1", "wordcount*ppwt"),2); ?></B>,  
+	Price per word: <B>$<? echo ProcessSQL('requests', "WHERE translator_id = $f[id] OR proofreader_id = $f[id] ORDER BY `deadline` desc LIMIT 0,1", "ppwt"); ?></B>,  
+	Words: <B><? echo ProcessSQL('requests', "WHERE translator_id = $f[id] OR proofreader_id = $f[id] ORDER BY `deadline` desc LIMIT 0,1", "wordcount"); ?></B>
+	</span>
+	
+	</td>
+  </tr>
+
+<tr><td colspan="2"><h4>Average Statistics</h4></td></tr>
+
+  <tr>
+    <td class="column1">Price per word</td>
+    <td class="column2">$<? 
+	
+	echo
+	round(ProcessSQL('requests', "WHERE translator_id = $f[id] OR proofreader_id = $f[id]", "ROUND(SUM(wordcount * ppwt),2)")
+	/ProcessSQL('requests', "WHERE translator_id = $f[id] OR proofreader_id = $f[id]", "SUM(wordcount)"),2);	
+
+	?></td>
+  </tr>
+
+  <tr>
+    <td class="column1">Request price</td>
+    <td class="column2">$<? 
+	
+	echo
+	round(ProcessSQL('requests', "WHERE translator_id = $f[id] OR proofreader_id = $f[id]", "ROUND(SUM(wordcount * ppwt),2)")
+	/GetTotalData('requests', "WHERE translator_id = $f[id] OR proofreader_id = $f[id]"),2);
+	
+	?></td>
+  </tr>
+
+  <tr>
+    <td class="column1">Word count</td>
+    <td class="column2"><? echo ceil(ProcessSQL('requests', "WHERE translator_id = $f[id] OR proofreader_id = $f[id]", "SUM(wordcount)")/GetTotalData('requests', "WHERE translator_id = $f[id] OR proofreader_id = $f[id]")); ?></td>
+  </tr>
+
+
+
+</table>
+</div>

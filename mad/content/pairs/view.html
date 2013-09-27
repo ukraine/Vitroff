@@ -1,0 +1,63 @@
+<?
+
+	$source = GetNameById ($f['source'], 'languages','name');
+	$target = GetNameById ($f['target'], 'languages','name');
+
+?>
+
+<div class="view">
+<table id="90">
+ 
+
+ <tr><td colspan="2"class="zagolovok"><h3 id="first">Statistics for <? echo "$source &raquo; $target"; ?></h3></td></tr>
+
+	<tr>
+		<td class="column1">Requests processed</td>
+		<td class='column2'><a href="/mad/requests/?language_pair=<? echo $f['id'] ?>"><? echo ProcessSQL('requests', "WHERE language_pair = $f[id]", "count(*)") ?></a></td>
+	</tr>
+
+	<tr>
+		<td class="column1">Words translated</td>
+		<td class='column2'><? echo ProcessSQL('requests', "WHERE language_pair = $f[id]", "SUM(wordcount)") ?></td>
+	</tr>
+	
+
+
+	<tr>
+		<td class="column1">Translators</td>
+		<td class='column2'><a href="/mad/translators/?language_pair=<? echo $f['id'] ?>"><? echo ProcessSQL('translators', "WHERE language_pair = $f[id]", "count(*)") ?></a></td>
+	</tr>
+
+    <tr>
+		<td class="column1">Earned</td>
+		<td class='column2'>$<? echo ProcessSQL('requests', "WHERE language_pair = $f[id]", "SUM(amountpaid)") ?></td>
+	</tr>
+
+<tr><td colspan="2"><h4>Max</h4></td></tr>
+
+    <tr>
+		<td class="column1">Translator's max price per word</td>
+		<td class='column2'>$<? echo ProcessSQL('requests', "WHERE language_pair = $f[id]", "ROUND(MAX(ppwt),2)") ?></td>
+	</tr>
+
+    <tr>
+		<td class="column1">Proofreader's max price per word</td>
+		<td class='column2'>$<? echo ProcessSQL('requests', "WHERE language_pair = $f[id]", "ROUND(MAX(ppwp),2)") ?></td>
+	</tr>
+
+<tr><td colspan="2"><h4>Averages</h4></td></tr>
+
+    <tr>
+		<td class="column1">Translator's average price per word</td>
+		<td class='column2'>$<? echo ProcessSQL('requests', "WHERE language_pair = $f[id]", "ROUND(AVG(ppwt),2)") ?></td>
+	</tr>
+
+    <tr>
+		<td class="column1">Proofreader's average price per word</td>
+		<td class='column2'>$<? echo ProcessSQL('requests', "WHERE language_pair = $f[id]", "ROUND(AVG(ppwp),2)") ?></td>
+	</tr>
+
+
+
+</table>
+</div>

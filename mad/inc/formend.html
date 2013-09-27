@@ -1,0 +1,9 @@
+			<div class="sendrequest">
+			<? GenerateInputTag("id","","hidden"); ?>
+			<input type="hidden"	name="action"	value="do_<? echo strtolower($_GET['action']); ?>">
+			<input type="submit"					value="<? echo $ButtonNames[$_GET['action']]; ?>">
+	
+			<? if ($pagetemplate!="popup") { ?>
+			<input type="submit"	name="submit"	value="<? echo $ButtonNames[$_GET['action']]; ?> & Continue Edit">
+			<? } ?>
+			</div>

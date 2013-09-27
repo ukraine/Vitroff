@@ -1,0 +1,20 @@
+<form method="post" action="">
+        
+		<h3 id="first">Name:</h3>
+
+				<? GenerateInputTag("firstname","First name") ?>
+			<br><? GenerateInputTag("lastname","Last name") ?>
+		
+		<h3>Contact details:</h3>
+		
+				<? GenerateInputTag("email","Email") ?>
+			<br><? GenerateInputTag("phone","Home Phone") ?>
+			<br><? GenerateInputTag("position","Position") ?>
+
+		<h3>Account details:</h3>
+
+				<? GenerateInputTag("login", "Username") ?>; 
+			<br><? GenerateInputTag("password","Password","password") ?>
+			<? include "inc/formend.html"; ?>
+
+</form>

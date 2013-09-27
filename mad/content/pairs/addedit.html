@@ -1,0 +1,12 @@
+<form method="post" action="">
+        
+		<h3 id="first">Language Pair:</h3>
+
+		&nbsp; &nbsp; &nbsp; From <br>
+		<? echo GenerateSelectList("languages", "source", "name"); ?>
+		
+		<br><br>&nbsp; &nbsp; &nbsp; to<br>
+		<? echo GenerateSelectList("languages", "target", "name"); ?>	
+
+		<? include "inc/formend.html"; ?>
+</form>

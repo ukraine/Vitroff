@@ -1,0 +1,50 @@
+<? // showCurrentStatus(); ?>
+
+<a href="javascript:history.back();">&laquo; back to editing</a>
+<form method="post" class="view">
+<table id="90">
+
+ <tr>
+ <td colspan="2" class="zagolovok">
+ <h3 id="first"><? ifExistGetValue('zagolovok') ?></h3></td>
+ </tr>
+
+  <tr>
+    <td class="column1">From:
+    </td>
+    <td class='column2'><? ifExistGetValue('from') ?></td>
+  </tr>
+
+  <tr>
+    <td class="column1">To:
+    </td>
+    <td class='column2'><? ifExistGetValue('to') ?></td>
+  </tr>
+
+  <tr>
+    <td class="column1">Subject:<br>
+    <td class='column2'><? ifExistGetValue('subject') ?>
+  </td>
+  </tr>
+
+
+
+</table>
+
+
+		<div class="helpfulright"><a href="<? echo "{$siteurl}templates/edit/$_POST[template_id]"; ?>?pagetemplate=popup" target="_blank">edit this email template</a></div>
+		<div class="preview"><? ifExistGetValue('text') ?></div>
+
+
+		<input type="hidden" value="<? ifExistGetValue('baseppw') ?>" name="baseppw">
+		<input type="hidden" value="<? ifExistGetValue('status_id') ?>"	name="status_id">
+		<input type="hidden" value="<? ifExistGetValue('toname') ?>" name="toname">
+		<input type="hidden" value="<? ifExistGetValue('fromname') ?>" name="fromname">
+		<input type="hidden" value="<? ifExistGetValue('toemail') ?>" name="toemail">
+		<input type="hidden" value="<? ifExistGetValue('fromemail') ?>" name="fromemail">
+		<input type="hidden" value="<? ifExistGetValue('filelisting') ?>" name="filelisting">
+		<input type="hidden" value="<? echo htmlentities($_POST['text']); ?>" name="content">
+		<input type="hidden" name="subject"	value="<? ifExistGetValue('subject') ?>">
+		<input type="hidden" name="action"	value="do_send">
+		<input type="submit" value="Send email" class="sendrequest">
+</form>

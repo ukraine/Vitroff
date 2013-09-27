@@ -1,0 +1,15 @@
+<form method="post" action="">
+ 
+			<h3 id="first">Login details:</h3> 
+
+		<? 
+		GenerateInputTag("login", "Username");
+		GenerateInputTag("password","Password","password"); ?>
+
+		<br>&nbsp; &nbsp; &nbsp; <B>Note: </B>After the successfull change you'll be redirected to the main page of this section<br>
+
+		<input type="hidden" value="<? ifExistGetValue('id'); ?>" name="id">
+		<input type="hidden" value="do_edit" name="action">
+		<input type="submit" name="Submit" value="Change">
+
+</form>

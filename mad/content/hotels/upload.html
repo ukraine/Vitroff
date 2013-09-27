@@ -1,0 +1,14 @@
+      <form enctype="multipart/form-data" action="" method="POST">
+        <b>Выберите файл: </b>
+
+      <p><b>Внимание!!!</b>
+      Просим вас отказаться от использования следующих символов в названии файла:<br>
+      <b id="red">! &quot; № ; % : ? * ( ) - &amp; $ # @ + = \ / ^ - </b><br>
+      Вышеуказанные символы являются служебными. Злоупотребление этим <br>требованием может привести к нестабильности в работе вашего сайта.<br>
+	  <B>Загружаемый файл должен иметь формат csv.</B> </p>
+       
+		<input name="file" type="file" style='width: 302px;'> 
+		<input type="hidden" name = "action" value = "do_upload"></input>
+        <input type="submit" value="Загрузить прайс">
+
+      </form>

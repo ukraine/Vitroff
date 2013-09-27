@@ -1,0 +1,32 @@
+	<table width="100%" border="0" cellspacing="0" cellpadding="0">
+		<tr class="zagolovorv1"> 
+				<td width="4%"  rowspan=2>#</td>
+				<td width="53%" rowspan=2>Name</td>
+				<td width="20%" colspan=2 id="finita">Actions</td>
+		</tr>
+		<tr class="zagolovorv1">
+			<td width="8%">Edit</td>
+			<td width="8%" id="fin">Delete</td>
+		</tr>
+
+
+<?
+
+for ($i=0; $i < mysql_num_rows($res); $i++)
+	
+	{
+	$number = $i+$startobject;
+	$f = mysql_fetch_array($res);
+
+	echo 
+	  "\t<tr" . PairedLineOrNot($number) . ">"
+	. "\n\t\t<td class='columns1' id='center'>$number</td>"
+	. "\n\t\t<td class='columns1' id='name'><span class=\"name\"><a href='view/$f[id]'>$f[lastname] $f[firstname]"; echo @$f['middlename'] . "</a></span></td>"
+	. "\n\t\t<td class='columns1'><a href='edit/$f[id]' class='edit'>Edit</a></td>"
+	. "\n\t\t<td class='columns1' id='end'><a href='delete/$f[id]' class='delete' onclick='return confirmDelete()'>Delete</a></td>"
+
+	. "\n\t</tr>\n";
+	}
+
+?>
+</table>

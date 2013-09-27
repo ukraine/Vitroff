@@ -1,0 +1,20 @@
+<form method="post" action="">
+        
+		<h3 id="first">Email template:</h3>
+
+				<? 
+			GenerateInputTag("name","Name");
+			GenerateInputTag("subject","Subject"); ?>
+
+			<br><select name="group_id"> 
+			<option value="1" <? select('group_id','1'); ?>>Translators</option>
+			<option value="2" <? select('group_id','2'); ?>>Customers</option>
+			</select> &nbsp; Group
+
+		<BR><? echo GenerateSelectList("status", "status_id", "name"); ?> &nbsp; Select workflow stage 
+		<span class="popup" onClick="MM_openBrWindow('/mad/status/add/?pagetemplate=popup','width=490,height=300')">Add a new workflow stage</span>
+
+			<br><br><? GenerateTextAreaTag("content"); ?>
+			<? include "inc/formend.html"; ?>
+
+</form>

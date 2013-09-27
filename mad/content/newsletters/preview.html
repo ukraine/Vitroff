@@ -1,0 +1,42 @@
+<? // showCurrentStatus(); ?>
+
+<a href="<? echo "{$siteurl}newsletters/edit/$_GET[id]"; ?>">edit this newsletter</a>
+<form method="post" class="view">
+<table id="90">
+
+ <tr>
+ <td colspan="2" class="zagolovok">
+ <h3 id="first"><? ifExistGetValue('zagolovok') ?></h3></td>
+ </tr>
+
+  <tr>
+    <td class="column1">From:
+    </td>
+    <td class='column2'><? echo "$Settings[admin_name] &lt;$Settings[email]&gt;" ?>
+	</td>
+  </tr>
+
+  <tr>
+    <td class="column1">To:
+    </td>
+    <td class='column2'>all translators</td>
+  </tr>
+
+  <tr>
+    <td class="column1">Subject:<br>
+    <td class='column2'><? ifExistGetValue('subject') ?>
+  </td>
+  </tr>
+
+
+
+</table>
+
+<br />
+		<div class="preview">Здравствуйте! <br /><br /><? echo nl2br($f['content']) ?></div>
+
+		<input type="hidden" value="<? ifExistGetValue('content') ?>" name="content">
+		<input type="hidden" name="subject"	value="<? ifExistGetValue('subject') ?>">
+		<input type="hidden" name="action"	value="do_sendnewsletter">
+		<input type="submit" value="Send email">
+</form>

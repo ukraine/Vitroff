@@ -1,0 +1,48 @@
+<? showCurrentStatus(); ?>
+<form method="post" class="view">
+<table id="90">
+
+ <tr>
+ <td colspan="2" class="zagolovok">
+ <h3 id="first">Request: <? getLanguagePairById($f['language_pair']); echo $result; ?> (<? ifExistGetValue('wordcount'); ?> words) </h3></td>
+ </tr>
+
+  <tr>
+    <td class="column1">From:
+    </td>
+    <td class='column2'><? ifExistGetValue('from') ?></td>
+  </tr>
+
+  <tr>
+    <td class="column1">To:
+    </td>
+    <td class='column2'><? ifExistGetValue('to') ?></td>
+  </tr>
+
+  <tr>
+    <td class="column1">Subject:<br>
+    <td class='column2'><? echo "$template[subject] - $f[id]"; ?>
+  </td>
+  </tr>
+
+	<tr>
+		<td colspan="2" class="textarea">
+		<textarea name="text"><? eval('?>'.$template['content'].'<?'); ?></textarea>
+		</td>
+	</tr>
+</table>
+
+		<input type="hidden" value="preview"							name="action">
+		<input type="hidden" value="<? ifExistGetValue('status_id') ?>"	name="status_id">
+		<input type="hidden" value="<? ifExistGetValue('toname') ?>"	name="toname">
+		<input type="hidden" value="<? ifExistGetValue('baseppw') ?>"	name="baseppw">
+		<input type="hidden" value="<? ifExistGetValue('fromname') ?>"	name="fromname">
+		<input type="hidden" value="<? ifExistGetValue('toemail') ?>"	name="toemail">
+		<input type="hidden" value="<? ifExistGetValue('fromemail') ?>" name="fromemail">
+		<input type="hidden" value="<? echo $filelisting; ?>" name="filelisting">
+		<input type="hidden" value="<? echo $template['id'] ?>" name="template_id">
+		<input type="hidden" value="Request: <? getLanguagePairById($f['language_pair']); echo $result; ?> (<? ifExistGetValue('wordcount'); ?> words)" name="zagolovok">
+		<input type="hidden" value="<? echo "$template[subject] - $f[id]" ; ?>"	name="subject">
+		<input type="submit" value="Press here for preview" class="sendrequest">
+
+</form>
