@@ -269,6 +269,9 @@ CREATE TABLE IF NOT EXISTS `staff` (
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251 AUTO_INCREMENT=10 ;
 
+INSERT INTO `staff` VALUES
+(1, 'Infant', 'Joe', 'Project Manager', 'test@email.com', '', 'admin', '6e60d68357b21b80d2cdc0e5adc530c1', '0000-00-00 00:00:00');
+
 -- --------------------------------------------------------
 
 --
