@@ -11,7 +11,7 @@ https://www.facebook.com/pages/Vitroff/244420725733760
 1. Download and extract the content of the archive
 2. Import /install/db.sql to the database you are going to use for Vitroff
 3. Change DB connection settings a the lib/configs.php file
-4. Point your browser to /admin/
+4. Point your browser to /mad/mad.php
 5. Start using it
 
 [LOGIN DETAILS]
