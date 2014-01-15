@@ -99,19 +99,7 @@ switch ($action) {
 // Выполнение добавления
     case "do_add":
 
-        // DEMO VERSION LIMITATIONS
-
         $title = "DEMONSTRATION VERSION LIMITATIONS";
-
-        if ($section == "status" || $section == "templates") {
-
-            $error_msg = "Sorry. This feature is disabled in the demo-version";
-            $section   = "default";
-            $action    = "demo";
-
-        } else {
-
-            // DEMO VERSION LIMITATIONS
 
             $action                  = "addedit";
             $title                   = ucfirst($section) . " &#151; adding new";
@@ -163,8 +151,6 @@ switch ($action) {
                 }
 
             }
-
-        } // DEMO VERSION LIMITATIONS LINE
 
         break;
 
