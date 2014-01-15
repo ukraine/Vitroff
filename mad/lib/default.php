@@ -99,8 +99,6 @@ switch ($action) {
 // Выполнение добавления
     case "do_add":
 
-        $title = "DEMONSTRATION VERSION LIMITATIONS";
-
             $action                  = "addedit";
             $title                   = ucfirst($section) . " &#151; adding new";
             $displayitwithsourcetext = "none";
@@ -550,15 +548,15 @@ switch ($action) {
 
         // DEMO VERSION LIMITATIONS
 
-        $title = "DEMONSTRATION VERSION LIMITATIONS";
+        // $title = "DEMONSTRATION VERSION LIMITATIONS";
 
-        if ($section == "status" || $section == "templates") {
+        /* if ($section == "status" || $section == "templates") {
 
             $error_msg = "Sorry. This feature is disabled in the demo-version";
             $section   = "default";
             $action    = "demo";
 
-        } else {
+        } else { */
 
             if (delete_data("id", $section, $_GET['id'])) {
 
@@ -572,7 +570,7 @@ switch ($action) {
 
             }
 
-        }
+       /* } */
 
         break;
 
