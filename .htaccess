@@ -1,6 +1,6 @@
-#Options -Indexes
-#php_flag display_errors on
-#AddDefaultCharset windows-1251
+Options -Indexes
+php_flag display_errors on
+AddDefaultCharset windows-1251
 
 RewriteEngine On
 RewriteBase /
@@ -17,5 +17,3 @@ RewriteCond %{REQUEST_URI}  !^/FCKeditor.*
 
 RewriteRule ^sitemap.xml$						/sitemap.php
 RewriteRule ^favicon.ico$						/img/favicon.ico
-
-RewriteRule ^(/)?$							/mad/mad.php [QSA,L]

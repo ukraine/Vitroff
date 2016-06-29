@@ -1,597 +1,648 @@
 <?
+
 // echo $section.$action;
-switch ($action) {
 
-    default:
+switch($action) {
 
-        $action = "default";
-        $title  = ucfirst($section) . " &#151; viewing the list";
+default:
 
-        // Инициализация перменных
-        $where = $qeuryforpaginator = $paging = "";
+	$action = "default";
+	$title = ucfirst($section) . " &#151; viewing the list";
 
-        // Получение дополнительных параметров
-        parse_str($_SERVER['QUERY_STRING'], $query);
-        foreach ($query as $key => $val) {
-            if ($key !== "section" & $key !== "page" & $key !== "sortby" & $key !== "ascdesc" && $key !== "param") {
+	// Èíèöèàëèçàöèÿ ïåðìåííûõ
+	$where = $qeuryforpaginator = $paging = "";
 
-                // Дополнительная строка для запроса в БД
-                $where = " WHERE $key = '$val'";
+		// Ïîëó÷åíèå äîïîëíèòåëüíûõ ïàðàìåòðîâ
+		parse_str($_SERVER['QUERY_STRING'],$query);
+		foreach($query as $key=>$val)
 
-            }
+				{
+					if ($key !== "section" & $key !== "page" & $key !== "sortby" & $key !== "ascdesc" && $key !=="param") {
+						
+						// Äîïîëíèòåëüíàÿ ñòðîêà äëÿ çàïðîñà â ÁÄ
+						$where =" WHERE $key = '$val'";
 
-            if ($key !== "section" & $key !== "page") {
+					}
 
-                // Для пагинатора
-                $qeuryforpaginator .= "$key=$val&";
+					if ($key !== "section" & $key !== "page") {
+												
+						// Äëÿ ïàãèíàòîðà
+						$qeuryforpaginator .= "$key=$val&";
 
-            }
+					}
 
-        }
+				}
 
-        $url = $_SERVER['REDIRECT_URL'] . "?" . $qeuryforpaginator;
+	$url = $_SERVER['REDIRECT_URL'] . "?" . $qeuryforpaginator;
 
-        // Формирование сути нашего запроса
-        $sql = "FROM `$section` $where ORDER BY `$orderby` $ascdesc";
+	// Ôîðìèðîâàíèå ñóòè íàøåãî çàïðîñà
+	$sql = "FROM `$section` $where ORDER BY `$orderby` $ascdesc";
 
-        // echo $sql;
+	// echo $sql;
 
-        // Считаем общее кол-во объектов
-        $res = @mysql_fetch_array(mysql_query("select count(*) as count $sql"));
+	// Ñ÷èòàåì îáùåå êîë-âî îáúåêòîâ
+	$res = @mysql_fetch_array(mysql_query("select count(*) as count $sql"));
 
-        // Если хоть что-то есть, дальше выводим список
-        if ($res) {
+	// Åñëè õîòü ÷òî-òî åñòü, äàëüøå âûâîäèì ñïèñîê
+	if($res) {
+		
+		// Âñåãî çàïèñåé
+		$count = $res['count'];
 
-            // Всего записей
-            $count = $res['count'];
+		// Ñ÷èòàåì îáùåå êîë-âî ñòðàíèö
+		$totalpages = ceil($count/$Settings['itemsonpage']);
 
-            // Считаем общее кол-во страниц
-            $totalpages = ceil($count / $Settings['itemsonpage']);
+		$page = 1;
+		
+		// óçíàåì íà êàêîé ñòðàíèöå íàõîäèìñÿ
+		if(!empty($_GET['page'])) $page = $_GET['page'];
 
-            $page = 1;
+		// echo "page: $page<BR>";
 
-            // узнаем на какой странице находимся
-            if (! empty($_GET['page'])) $page = $_GET['page'];
+		// Âûñòàâëåíèå ëèìèòà êîë-âà îáúåêòîâ íà ñòðàíèöå (òàê æå èñï-çóåòñÿ äëÿ íóìåðàöèè îáú. íà ñòðàíèöàõ)
+		$startlimit = ($Settings['itemsonpage']*$page) - $Settings['itemsonpage'];
 
-            // echo "page: $page<BR>";
+		// $startlimitv2 = $startlimit-$Settings['itemsonpage'];
 
-            // Выставление лимита кол-ва объектов на странице (так же исп-зуется для нумерации объ. на страницах)
-            $startlimit = ($Settings['itemsonpage'] * $page) - $Settings['itemsonpage'];
+		// echo "LIMIT $startlimit, XX<BR>";
 
-            // $startlimitv2 = $startlimit-$Settings['itemsonpage'];
+		// Ïåðâûé îáúåêò íà ñòðàíèöå
+		$startobject = $startlimit + 1;
 
-            // echo "LIMIT $startlimit, XX<BR>";
+		// Ïîñëåäíèé îáúåêò íà ñòðàíèöå
+		$endobject = $startobject + $Settings['itemsonpage'] - 1;
 
-            // Первый объект на странице
-            $startobject = $startlimit + 1;
+		// Åñëè îáúåêòîâ ìåíüøå, ÷åì ðàçðåøåíî íà ñòðàíèöå
+		if ($count <= $Settings['itemsonpage']) $endobject = $count;
+		
+		// Èñï. äëÿ ïîñëåäíåé ñòðàíèöû
+		if ($endobject > $count) $endobject = $count ;
 
-            // Последний объект на странице
-            $endobject = $startobject + $Settings['itemsonpage'] - 1;
+		// Ôîðìèðîâàíèå êîíå÷íîãî çàïðîñà
+		$sql = $sql . " LIMIT $startlimit, $Settings[itemsonpage]";
 
-            // Если объектов меньше, чем разрешено на странице
-            if ($count <= $Settings['itemsonpage']) $endobject = $count;
+		// echo $sql;
 
-            // Исп. для последней страницы
-            if ($endobject > $count) $endobject = $count;
+		// Ñîáñòâåííî äåëàåì âûáîðêó
+		$res = mysql_query("SELECT * $sql");
 
-            // Формирование конечного запроса
-            $sql = $sql . " LIMIT $startlimit, $Settings[itemsonpage]";
 
-            // echo $sql;
+	}
 
-            // Собственно делаем выборку
-            $res = mysql_query("SELECT * $sql");
+	break;
 
+// Ñòðàíè÷êà äîáàâëåíèÿ ýëåìåíòà
+case "add":
 
-        }
+		$action = "addedit";
+		$title = ucfirst($section) . " &#151; adding new";
+		$displayitwithsourcetext = "none";
 
-        break;
+	break;
 
-// Страничка добавления элемента
-    case "add":
+// Âûïîëíåíèå äîáàâëåíèÿ
+case "do_add":
 
-        $action                  = "addedit";
-        $title                   = ucfirst($section) . " &#151; adding new";
-        $displayitwithsourcetext = "none";
+	// DEMO VERSION LIMITATIONS
 
-        break;
+	$title = "DEMONSTRATION VERSION LIMITATIONS";
 
-// Выполнение добавления
-    case "do_add":
+	if ($section == "status" || $section == "templates") {
 
-            $action                  = "addedit";
-            $title                   = ucfirst($section) . " &#151; adding new";
-            $displayitwithsourcetext = "none";
+		$error_msg = "Sorry. This feature is disabled in the demo-version";
+		$section = "default";
+		$action = "demo";
 
-            // Проверяем получаемые данные на корректность и если все хорошо, вводим данные
-            if (IsRequiredFieldsFilled($SectionsRequiredFields[$section])) {
+	}
 
-                // REQUESTS: Если есть поле с исх. текстом то подсчитываем слова
-                if (! empty($_POST['source_text'])) $_POST['wordcount'] = str_word_count($_POST['source_text']);
+		else {
 
-                // Упрощаем работу с именами
-                /* if ($section == "customers" && !empty($_POST['firstnamelastname'])) {
-                    $name = explode($_POST['firstnamelastname']," ");
-                    $_POST['lastname'] = $name[1];
-                    $_POST['firstname'] = $name[0];
-                    } */
+	// DEMO VERSION LIMITATIONS
 
-                // ALL: Временная метка поступления
-                $_POST['registrationtime'] = date("Y-m-d H:m:s");
+	$action = "addedit";
+	$title = ucfirst($section) . " &#151; adding new";
+	$displayitwithsourcetext = "none";
 
-                // Вставляем данные в базу данных
-                if (insert_data($_POST, $section)) {
+		// Ïðîâåðÿåì ïîëó÷àåìûå äàííûå íà êîððåêòíîñòü è åñëè âñå õîðîøî, ââîäèì äàííûå
+		if (IsRequiredFieldsFilled($SectionsRequiredFields[$section]) ) {
 
-                    // Если присутствуют файлы, добавляем также и их
-                    if ($_FILES) insert_files(ProcessSQL('requests', "ORDER BY `id` DESC LIMIT 0,1"));
+			// REQUESTS: Åñëè åñòü ïîëå ñ èñõ. òåêñòîì òî ïîäñ÷èòûâàåì ñëîâà 
+			if (!empty($_POST['source_text'])) $_POST['wordcount'] = str_word_count($_POST['source_text']);
 
-                    // Если нажата кнопка "Continue Edit", то узнаем ID только что созданной страницы и продолжаем редактирование
-                    if (! empty($_POST['submit'])) {
-                        $action = "addedit";
-                        header("Location: {$siteurl}$section/edit/" . ProcessSQL('requests', "ORDER BY `id` DESC LIMIT 0,1"));
-                        break;
-                    }
+			// Óïðîùàåì ðàáîòó ñ èìåíàìè
+			/* if ($section == "customers" && !empty($_POST['firstnamelastname'])) {
+				$name = explode($_POST['firstnamelastname']," "); 
+				$_POST['lastname'] = $name[1];
+				$_POST['firstname'] = $name[0];
+				} */
 
-                    // Если открыто всплывающее окно
-                    if ($pagetemplate == "popup") {
-                        $section   = "default";
-                        $action    = "popupclose";
-                        $error_msg = "Operation completed";
-                    } // В противном случае выводим
-                    else header("Location: {$siteurl}$section/");
+			// ALL: Âðåìåííàÿ ìåòêà ïîñòóïëåíèÿ
+			$_POST['registrationtime'] = date("Y-m-d H:m:s");
 
-                } // Если не смогли внести данные по каким-либо причинам - выводим сообщение об ошибке
-                else {
-                    $title     = "Error";
-                    $error_msg = "Changes where <B>NOT MADE</B>. Please call to support and state the following: " . mysql_errno() . mysql_error();
+			// Âñòàâëÿåì äàííûå â áàçó äàííûõ
+			if (insert_data($_POST, $section)) {
 
-                    var_dump(mysql_error());
-                }
+				// Åñëè ïðèñóòñòâóþò ôàéëû, äîáàâëÿåì òàêæå è èõ
+				if ($_FILES) insert_files(ProcessSQL ('requests', "ORDER BY `id` DESC LIMIT 0,1"));
 
-            }
+				// Åñëè íàæàòà êíîïêà "Continue Edit", òî óçíàåì ID òîëüêî ÷òî ñîçäàííîé ñòðàíèöû è ïðîäîëæàåì ðåäàêòèðîâàíèå
+				if (!empty($_POST['submit'])) {
+					$action = "addedit";
+					header("Location: {$siteurl}$section/edit/" . ProcessSQL ('requests', "ORDER BY `id` DESC LIMIT 0,1"));
+					break;
+				}
 
-        break;
+				// Åñëè îòêðûòî âñïëûâàþùåå îêíî
+				if ($pagetemplate=="popup") {
+					$section	= "default"; 
+					$action		= "popupclose"; 
+					$error_msg	= "Operation completed";
+				}
 
-// Страничка редактирования элемента
-    case "edit":
+				// Â ïðîòèâíîì ñëó÷àå âûâîäèì 
+				else header("Location: {$siteurl}$section/");
 
-        $action                  = "addedit";
-        $title                   = ucfirst($section) . " &#151; editing existing";
-        $displayitwithsourcetext = "none";
+			}	
+			
+			// Åñëè íå ñìîãëè âíåñòè äàííûå ïî êàêèì-ëèáî ïðè÷èíàì - âûâîäèì ñîîáùåíèå îá îøèáêå
+			else {
+				$title = "Error";
+				$error_msg = "Changes where <B>NOT MADE</B>. Please call to support and state the following: " . mysql_errno() . mysql_error();
+			}
 
-        // Делаем выборку с данными о конкретной объекте
-        $f = RunQueryReturnDataArray($section, "WHERE `id` = $_GET[id]");
-        execute_action("update_edit_request_data");
+		}
 
-        if (! empty($f['source_text'])) $displayitwithsourcetext = "inline";
+		}	// DEMO VERSION LIMITATIONS LINE
 
-        break;
+	break;
 
-// Выполнение редактирования
-    case "do_edit":
+// Ñòðàíè÷êà ðåäàêòèðîâàíèÿ ýëåìåíòà
+case "edit":
 
-        // DEMO VERSION LIMITATIONS
-        /*
+	$action = "addedit";
+	$title = ucfirst($section) . " &#151; editing existing";
+	$displayitwithsourcetext = "none";
 
-        $title = "DEMONSTRATION VERSION LIMITATIONS";
+	// Äåëàåì âûáîðêó ñ äàííûìè î êîíêðåòíîé îáúåêòå
+	$f = RunQueryReturnDataArray($section, "WHERE `id` = $_GET[id]");
 
-        if ($section == "status" || $section == "templates") {
+	if (!empty($f['source_text'])) $displayitwithsourcetext="inline";
 
-            $error_msg = "Sorry. This feature is disabled in the demo-version";
-            $section = "default";
-            $action = "demo";
+	break;
 
-        }
+// Âûïîëíåíèå ðåäàêòèðîâàíèÿ
+case "do_edit":
 
-            else { */
+	// DEMO VERSION LIMITATIONS
+	/*
 
-        // DEMO VERSION LIMITATIONS
+	$title = "DEMONSTRATION VERSION LIMITATIONS";
 
-        // 06.03.2007 Added "Save & Continue Func-on"
+	if ($section == "status" || $section == "templates") {
 
-        $action = "edit";
-        $title  = ucfirst($section) . " &#151; editing existing";
+		$error_msg = "Sorry. This feature is disabled in the demo-version";
+		$section = "default";
+		$action = "demo";
 
-        $location = $siteurl . $section . "/";
+	}
 
-        // Если загружались какие-либо файлы, записываем их в определенную директорию
-        // а информацию о них в базу данных
+		else { */
 
-        if ($_FILES) insert_files($_GET['id']);
+	// DEMO VERSION LIMITATIONS
 
-        // Если в поле "исходный текст" есть текст, то считаем кол-во слов, занося их в переменную
-        if (! empty($_POST['source_text'])) $_POST['wordcount'] = str_word_count($_POST['source_text']);
+	// 06.03.2007 Added "Save & Continue Func-on"
 
+	$action = "edit";
+	$title = ucfirst($section) . " &#151; editing existing";
 
-        // 08.11.2009 Если была указана сумма в поле "оплачено" раздела запросы при редактировании то меняем статус на оплачено
-        if ($section == "requests" && $_POST['amountpaid'] > 0 && $_POST['status_id'] <= 2) $_POST['status_id'] = "3";
+	$location = $siteurl.$section."/";
 
-        // "Смена пароля": Если мы на странице изменения пароля, то шифруем его и заносим в таблицу
-        if (! empty($_POST['password']) && $_POST['password'] !== $UserDetails['password']) {
-            $_POST['password'] = md5($_POST['password']);
-        } else    unset($_POST['password']);
+			// Åñëè çàãðóæàëèñü êàêèå-ëèáî ôàéëû, çàïèñûâàåì èõ â îïðåäåëåííóþ äèðåêòîðèþ
+			// à èíôîðìàöèþ î íèõ â áàçó äàííûõ
+			
+			if ($_FILES)		insert_files($_GET['id']);
 
-        // Кнопка "Continue Edit" - продолжение редактирования после сохранения
-        if (! empty($_POST['submit'])) $location = "http://" . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+	// Åñëè â ïîëå "èñõîäíûé òåêñò" åñòü òåêñò, òî ñ÷èòàåì êîë-âî ñëîâ, çàíîñÿ èõ â ïåðåìåííóþ
+	if (!empty($_POST['source_text'])) $_POST['wordcount'] = str_word_count($_POST['source_text']);
 
-        // Сохраняем данные и возвращаемся на главную страницу раздела
-        $filter_fields = array(
-            'status_id', 'area_id', 'deadline', 'customer_id', 'customer_project_id', 'instructions',
-            'isprojectactive', 'iscertificationrequired', 'isnotarizationrequired', 'isscanrequired',
-            'isexpressmailrequired', 'istranslationmemory', 'postal_tracking_number', 'comments',
-            'wordcount', 'characters', 'ppw', 'postpayment', 'estimatedprice', 'discount', 'amountpaid',
-            'transaction_id', 'translator_id', 'ppwt', 'deadline_translator', 'translator_paid', 'proofreader_id',
-            'ppwp', 'deadline_proofreader', 'proofreader_paid',  'source_text', 'id', 'action'
-        );
-        $arr           = filterRequestArray($_POST, $filter_fields);
 
-        if (edit_data($arr, $section)) {
-            execute_action("request_after_update");
-            header("Location: $location");
-        } else {
-            $title     = "Error";
-            $error_msg = "Changes where <B>NOT MADE</B>. Please call to support and state the following: " . mysql_errno() . mysql_error();
+	// 08.11.2009 Åñëè áûëà óêàçàíà ñóììà â ïîëå "îïëà÷åíî" ðàçäåëà çàïðîñû ïðè ðåäàêòèðîâàíèè òî ìåíÿåì ñòàòóñ íà îïëà÷åíî
+	if ($section == "requests" && $_POST['amountpaid'] > 0 && $_POST['status_id'] <= 2) $_POST['status_id'] = "3";
 
-            var_dump(mysql_error());
+	// "Ñìåíà ïàðîëÿ": Åñëè ìû íà ñòðàíèöå èçìåíåíèÿ ïàðîëÿ, òî øèôðóåì åãî è çàíîñèì â òàáëèöó
+	if (!empty($_POST['password']) && $_POST['password']!== $UserDetails['password']) {
+		$_POST['password'] = md5($_POST['password']);
+	} else	unset($_POST['password']);
 
-        }
+	// Êíîïêà "Continue Edit" - ïðîäîëæåíèå ðåäàêòèðîâàíèÿ ïîñëå ñîõðàíåíèÿ
+	if (!empty($_POST['submit'])) $location = "http://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
 
-        /*	} 	// DEMO VERSION LIMITATIONS */
+	// Ñîõðàíÿåì äàííûå è âîçâðàùàåìñÿ íà ãëàâíóþ ñòðàíèöó ðàçäåëà
+	if (edit_data (&$_POST, $section)) header("Location: $location");
+	else {
+			$title = "Error";
+			$error_msg = "Changes where <B>NOT MADE</B>. Please call to support and state the following: " . mysql_errno() . mysql_error();
 
-        break;
+	}
 
-    case "addnew":
-        execute_action("assign_new_translator");
+	/*	} 	// DEMO VERSION LIMITATIONS */
 
-        header("Location: http://" . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
-        break;
+	break;
 
-    case "delete_translator":
-        execute_action("delete_translator");
 
-        header("Location: http://" . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
-        break;
+// Ïðîñìîòð ýëåìåíòà
+case "duplicate":
 
-// Просмотр элемента
-    case "duplicate":
+	$_POST = RunQueryReturnDataArray($section, "WHERE `id` = $_GET[id]");
+	
+	unset($_POST['id'], $_POST['amount_paid'], $_POST['transaction_id'], $_POST['amountpaid']);
 
-        $_POST = RunQueryReturnDataArray($section, "WHERE `id` = $_GET[id]");
+	$_POST['isprojectactive'] = '1';
+	$_POST['status_id'] = '2';
 
-        unset($_POST['id'], $_POST['amount_paid'], $_POST['transaction_id'], $_POST['amountpaid']);
+	$_POST['deadline'] = date("Y-m-d",time()+(86400*5));
 
-        $_POST['isprojectactive'] = '1';
-        $_POST['status_id']       = '2';
+	// Ñîõðàíÿåì äàííûå è âîçâðàùàåìñÿ íà ãëàâíóþ ñòðàíèöó ðàçäåëà
+	if (insert_data ($_POST, $section)) {$location =  $siteurl.$section."/edit/".mysql_insert_id(); header("Location: $location");}
+	else {
+			$title = "Error";
+			$error_msg = "Changes where <B>NOT MADE</B>. Please call to support and state the following: " . mysql_errno() . mysql_error();
 
-        $_POST['deadline'] = date("Y-m-d", time() + (86400 * 5));
+	}
 
-        // Сохраняем данные и возвращаемся на главную страницу раздела
-        if (insert_data($_POST, $section)) {
-            $location = $siteurl . $section . "/edit/" . mysql_insert_id();
-            header("Location: $location");
-        } else {
-            $title     = "Error";
-            $error_msg = "Changes where <B>NOT MADE</B>. Please call to support and state the following: " . mysql_errno() . mysql_error();
+	break;
 
-        }
+// Ïðîñìîòð ýëåìåíòà
+case "closeproject":
 
-        break;
+	$action = "closeproject";
+	$title	= "Closing the project";
 
-// Просмотр элемента
-    case "closeproject":
+	mysql_query("UPDATE `requests` SET `amountpaid` = `estimatedprice`, `status_id` = '10', `isprojectactive` = '0' WHERE `id` = $_GET[id]");
 
-        $action = "closeproject";
-        $title  = "Closing the project";
+	header("Location: $siteurl{$section}/view/$_GET[id]");
 
-        mysql_query("UPDATE `requests` SET `amountpaid` = `estimatedprice`, `status_id` = '10', `isprojectactive` = '0' WHERE `id` = $_GET[id]");
+	break;
 
-        header("Location: $siteurl{$section}/view/$_GET[id]");
+// Ïðîñìîòð ýëåìåíòà
+case "view":
 
-        break;
+	$action = "view";
+	$title = "View";
 
-// Просмотр элемента
-    case "view":
+	$sendemailvisibility = "none";
 
-        $action = "view";
-        $title  = "View";
+	// Ïîëó÷àåì ìàññèâ ñ äàííûìè îá îáúåêòå
+	$f = RunQueryReturnDataArray($section, "WHERE `id` = $_GET[id]");
 
-        $sendemailvisibility = "none";
+	// Åñëè åñòü èíôîðìàöèÿ ïî îáúåêòó ñ òàêèì ÈÄ, òî íà÷èíàåì ðàáîàòü
+	if ($f)	{
 
-        // Получаем массив с данными об объекте
-        $f = RunQueryReturnDataArray($section, "WHERE `id` = $_GET[id]");
+	// Ìàññèâ ñ äàííûìè î øàáëîíå ñîãëàñíî òåêóùåìó ñòàòóñó
+	$template = @RunQueryReturnDataArray ("templates", "WHERE status_id=$f[status_id]");
 
-        // Если есть информация по объекту с таким ИД, то начинаем рабоать
-        if ($f) {
+	// Îòêóäà áåðåì äàííûå î öåíå äëÿ âñòàâêè â øàïêó
+	$priceperword = array("1" => "ppwt", "2" => "ppw");
 
-            // Массив с данными о шаблоне согласно текущему статусу
-            $template = @RunQueryReturnDataArray("templates", "WHERE status_id=$f[status_id]");
+		// Åñëè ñóùåñòâóåò øàáëîí äëÿ òåêóùåãî ñòàòóñà ïðîåêòà
+		if ($section == "requests" && $template) {
 
-            // Откуда берем данные о цене для вставки в шапку
-            $priceperword = array("1" => "ppwt", "2" => "ppw");
+			$sendemailvisibility = "block";	
+			$baseppw = $f[$priceperword[$template['group_id']]];
+		
+		}
 
-            // Если существует шаблон для текущего статуса проекта
-            if ($section == "requests" && $template) {
+	}
 
-                $sendemailvisibility = "block";
-                $baseppw             = $f[$priceperword[$template['group_id']]];
+	else { $error_msg = "Object not found. Please <a href='/mad/'><B>return back</B></a> to make a new search"; $section = "default"; $action = "notfound"; }
 
-            }
+	break;
 
-        } else {
-            $error_msg = "Object not found. Please <a href='/mad/'><B>return back</B></a> to make a new search";
-            $section   = "default";
-            $action    = "notfound";
-        }
+// Ñòðàíè÷êà íàïèñàíèÿ ïèñüìà
+case "compose":
 
-        break;
+	global $filelisting;
 
-// Страничка написания письма
-    case "compose":
+	// Îòêóäà áåðåì äàííûå î öåíå äëÿ âñòàâêè â øàïêó
+	$priceperword = array("1" => "ppwt", "2" => "ppw");
 
-        global $filelisting;
+	$action = "compose";
+	$title = "Compose email";
 
-        // Откуда берем данные о цене для вставки в шапку
-        $priceperword = array("1" => "ppwt", "2" => "ppw");
+	// Íåêîòîðûå áàçîâûå êîíôèãè
+	$curr = "-USD";
 
-        $action = "compose";
-        $title  = "Compose email";
+	// Äàííûå î êîíêðåòíîì ïåðåâîäå
+	$f = @RunQueryReturnDataArray ($section, "WHERE id=$_GET[id]");
 
-        // Некоторые базовые конфиги
-        $curr = "-USD";
+	// Ïîëó÷àåì ìàññèâ ñ äàííûìè î øàáëîíå äëÿ òåêóùåãî ñòàòóñà ïåðåâîäà
+	$template = @RunQueryReturnDataArray ("templates", "WHERE status_id=$f[status_id]");
 
-        // Данные о конкретном переводе
-        $f = @RunQueryReturnDataArray($section, "WHERE id=$_GET[id]");
+	$baseppw = $f[$priceperword[$template['group_id']]];
 
-        // Получаем массив с данными о шаблоне для текущего статуса перевода
-        $template = @RunQueryReturnDataArray("templates", "WHERE status_id=$f[status_id]");
+	// Ïîëó÷àåì äàííûå ñ èìåíåì è åìåéëîì ïîëó÷àòåëÿ
+	$recepient_details = RunQueryReturnDataArray ($group[$template['group_id']]."s", $more="WHERE id=".$f[$group[$template['group_id']]."_id"], $column="*");
 
-        $baseppw = $f[$priceperword[$template['group_id']]];
+	$baseprice = round($f['wordcount']*$baseppw,2);
 
-        // Получаем данные с именем и емейлом получателя
-        $recepient_details = RunQueryReturnDataArray($group[$template['group_id']] . "s", $more = "WHERE id=" . $f[$group[$template['group_id']] . "_id"], $column = "*");
+	if (!empty($f['currency'])) $curr = strtoupper("-".$f['currency']);
+	$baseprice = array($baseprice.$curr, round(($baseprice*1.3),2).$curr, round(($baseprice*1.699),2).$curr);
 
-        $baseprice = round($f['wordcount'] * $baseppw, 2);
+	// ôîðìèðóåì äàííûå îá îòïðàâèòåëå
+	$f['fromname'] = "$UserDetails[firstname] $UserDetails[lastname]";
+	$f['fromemail'] = $UserDetails['email'];
 
-        if (! empty($f['currency'])) $curr = strtoupper("-" . $f['currency']);
-        $baseprice = array($baseprice . $curr, round(($baseprice * 1.3), 2) . $curr, round(($baseprice * 1.699), 2) . $curr);
+	// Äàííûå î ïîëó÷àòåëå
+	$f['toname'] = 	"$recepient_details[firstname] $recepient_details[lastname]";
+	$f['toemail'] = $recepient_details['email'];
 
-        // формируем данные об отправителе
-        $f['fromname']  = "$UserDetails[firstname] $UserDetails[lastname]";
-        $f['fromemail'] = $UserDetails['email'];
+	// Äàííûå î çàãîëîâêå ïèñüìà (ïðåâüþ)
+	$f['from'] = $f['fromname']." &lt;".$f['fromemail']."&gt;";
+	$f['to'] = $f['toname']." &lt;".$f['toemail']."&gt;";
+	
+	break;
 
-        // Данные о получателе
-        $f['toname']  = "$recepient_details[firstname] $recepient_details[lastname]";
-        $f['toemail'] = $recepient_details['email'];
+// Ïðåäâàðèòåëüíûé ïðîñìîòð ïèñüìà
+case "preview":
 
-        // Данные о заголовке письма (превью)
-        $f['from'] = $f['fromname'] . " &lt;" . $f['fromemail'] . "&gt;";
-        $f['to']   = $f['toname'] . " &lt;" . $f['toemail'] . "&gt;";
+	$action = "preview";
+	$title = "Email Preview";
 
-        break;
+	// Äàííûå î êîíêðåòíîì îáúåêòå(ðàññûëêå, ïåðåâîä÷èêå)
+	$f = @RunQueryReturnDataArray ($section, "WHERE id=$_GET[id]");
 
-// Предварительный просмотр письма
-    case "preview":
+	@$f['to'] = $_POST['toname']." &lt;".$_POST['toemail']."&gt;";
+	@$f['from'] = $_POST['fromname']." &lt;".$_POST['fromemail']."&gt;";
 
-        $action = "preview";
-        $title  = "Email Preview";
+	break;
 
-        // Данные о конкретном объекте(рассылке, переводчике)
-        $f = @RunQueryReturnDataArray($section, "WHERE id=$_GET[id]");
+	// Ïðåäâàðèòåëüíûé ïðîñìîòð ïèñüìà
+case "download":
 
-        @$f['to'] = $_POST['toname'] . " &lt;" . $_POST['toemail'] . "&gt;";
-        @$f['from'] = $_POST['fromname'] . " &lt;" . $_POST['fromemail'] . "&gt;";
+	$action = "download";
 
-        break;
+		switch($section) {
+		
+		default: 
 
-    // Предварительный просмотр письма
-    case "download":
+			$template = "shipping_label.txt";
 
-        $action = "download";
+			// Äàííûå î êîíêðåòíîì îáúåêòå(ïðîåêòå,ïåðåâîä÷èêå è òä.)
+			$f = @RunQueryReturnDataArray ("customers c, requests r", "WHERE r.id='$_GET[id]' AND r.customer_id = c.id","*");
 
-        // Данные о конкретном объекте(проекте,переводчике и тд.)
-        $f = @RunQueryReturnDataArray("customers c, requests r", "WHERE r.id='$_GET[id]' AND r.customer_id = c.id", "*");
+			$filename = $_GET['id'] . "-reamde.txt";
 
-        $filename = $_GET['id'] . "-reamde.txt";
+			$f['iscertificationrequired']	= $YesOrNoArray[$f['iscertificationrequired']];
+			$f['isnotarizationrequired']	= $YesOrNoArray[$f['isnotarizationrequired']];
+			$f['isscanrequired']			= $YesOrNoArray[$f['isscanrequired']];
+			$f['isexpressmailrequired']		= $ShippingOptions[$f['isexpressmailrequired']];
 
-        $f['iscertificationrequired'] = $YesOrNoArray[$f['iscertificationrequired']];
-        $f['isnotarizationrequired']  = $YesOrNoArray[$f['isnotarizationrequired']];
-        $f['isscanrequired']          = $YesOrNoArray[$f['isscanrequired']];
-        $f['isexpressmailrequired']   = $ShippingOptions[$f['isexpressmailrequired']];
+			header('Content-Type: Content-Type: text/plain');
 
-        header('Content-Description: File Transfer');
-        header('Content-Type: Content-Type: text/plain');
-        header('Content-Disposition: attachment; filename=' . basename($filename));
-        header('Content-Transfer-Encoding: binary');
-        header('Expires: 0');
-        header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
-        header('Pragma: public');
+			break;
 
-        echo ApplyTemplate("shipping_label", $f);
-        die();
+	case "biz":
 
-        break;
+			global $Settings;
 
-// Предварительный просмотр письма
-    case "dlinvoice":
+			// Äàííûå î êîíêðåòíîì îáúåêòå(ïðîåêòå,ïåðåâîä÷èêå è òä.)
+			$f = RunQueryReturnDataArray ("biz", "WHERE `id`='$_GET[id]'","*");
+			
+			// Ëîêàëèçàöèÿ äàòû
+			$month_ua = array("", "січня", "лютого", "березня", "квітня", "травня", "червня", "липня", "серпня", "вересня", "жовтня", "листопада", "грудня");
+			$utime = strtotime($f['dateSigned']);
+			$utimeC = strtotime($f['dateCompleted']);
 
-        $microtime = time();
+			$f['number'] = $f['siteId'] - 11;
+			$f['dateukr'] = date("d", $utime) . " " . $month_ua[date("n", $utime)] . " " . date("Y", $utime);
+			$f['datecompletedC'] = date("d", $utimeC) . " " . $month_ua[date("n", $utimeC)] . " " . date("Y", $utimeC);
+			$f['dateeng'] = date("F d, Y", strtotime($f['dateSigned']));
+			$f['siteIdUkr'] = $f['siteId'];
+			$f['siteIdEng'] = $f['siteId'];
+			$f['ratePerHour'] = $Settings['defaultPricePerHour'];
 
-        // Данные о конкретном объекте(проекте,переводчике и тд.)
-        $f = @RunQueryReturnDataArray("customers c, requests r", "WHERE r.id='$_GET[id]' AND r.customer_id = c.id", "*");
+			$f['amountWritten'] = num2str($f['amount']);
+			$f['hoursWritten'] = num2str($f['numberOfHours']);
 
-        $filename = $_GET['id'] . "-invoice.doc";
+			switch($_GET['doc']) {
+				
+				default:
 
-        $f['iscertificationrequired'] = $YesOrNoArray[$f['iscertificationrequired']];
-        $f['isnotarizationrequired']  = $YesOrNoArray[$f['isnotarizationrequired']];
-        $f['isscanrequired']          = $YesOrNoArray[$f['isscanrequired']];
-        $f['isexpressmailrequired']   = $ShippingOptions[$f['isexpressmailrequired']];
-        $f['wire_transfer_fee']       = $Settings['wire_transfer_fee'];
-        $f['currency']                = $Settings['currency'];
-        $f['service']                 = getNameById($f['area_id'], 'rates', 'name');
-        $f['discount_amount']         = round($f['estimatedprice'] * ($f['discount'] / 100), 2);
-        $f['online_amount']           = $f['estimatedprice'] - $f['discount_amount'];
-        $f['invoicedate']             = date("F d, Y", $microtime);
-        $f['duedate']                 = date("F d, Y", $microtime + 86400 * 10);
-        $f['total_due']               = round($f['estimatedprice'] - $f['discount_amount'] - $f['amountpaid']);
+					$filename = "agreement-$f[dateSigned].doc";
+					$template = "agreement-template.rtf";
+					break;
+	
+				case "act":
 
-        header('Content-Description: File Transfer');
-        header('Content-Type: application/rtf');
-        header('Content-Disposition: attachment; filename=' . basename($filename));
-        header('Content-Transfer-Encoding: binary');
-        header('Expires: 0');
-        header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
-        header('Pragma: public');
+					$template = "act-template.rtf";
+					$filename = "act-$f[dateSigned].doc";
+					break;
 
-        echo ApplyTemplate("invoice", $f);
-        die();
+			}
 
-        break;
+		    header('Content-Type: application/rtf');
 
-// Отправка письма
-    case "do_send":
+		break;
 
-        $action              = "view";
-        $sendemailvisibility = "none";
+		}
 
-        $title = "Status of Request";
-        if (sendmail2()) {
 
-            $details = array(
-                "baseppw"   => $_POST['baseppw'],
-                "status_id" => $_POST['status_id'] + 1,
-                "id"        => $_GET['id']
-            );
+    header('Content-Description: File Transfer');
+    header('Content-Disposition: attachment; filename='.basename($filename));
+    header('Content-Transfer-Encoding: binary');
+    header('Expires: 0');
+    header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+    header('Pragma: public');
 
-            edit_data($details, $_GET['section']);
-        }
 
-        $title = "View";
-        $f     = @RunQueryReturnDataArray($section, "WHERE id=$_GET[id]");
 
-        if ($section == "requests" && $f['estimatedprice'] > 0 && $f['status_id'] == 3) $baseppw = $f['ppwt'];
-        elseif ($section == "requests" && $f['estimatedprice'] > 0) $baseppw = round($f['estimatedprice'] / $f['wordcount'], 4); else $baseppw = $calculator['baseppw'];
+	echo ApplyTemplate($template,$f);
+	die();
 
-        break;
+	break;
 
-// Отправка письма
-    case "do_sendnewsletter":
+// Ïðåäâàðèòåëüíûé ïðîñìîòð ïèñüìà
+case "dlinvoice":
 
-        sendnewsletters();
+	$microtime = time();
 
-        $action = "view";
-        $f      = @RunQueryReturnDataArray($section, "WHERE id=$_GET[id]");
-        $title  = "Status of Request";
+	// Äàííûå î êîíêðåòíîì îáúåêòå(ïðîåêòå,ïåðåâîä÷èêå è òä.)
+	$f = @RunQueryReturnDataArray ("customers c, requests r", "WHERE r.id='$_GET[id]' AND r.customer_id = c.id","*");
 
-        break;
+	$filename = $_GET['id'] . "-invoice.doc";
 
-// Страница закрытия всплывающего окна
-    case "popupclose":
+	$f['iscertificationrequired']	= $YesOrNoArray[$f['iscertificationrequired']];
+	$f['isnotarizationrequired']	= $YesOrNoArray[$f['isnotarizationrequired']];
+	$f['isscanrequired']			= $YesOrNoArray[$f['isscanrequired']];
+	$f['isexpressmailrequired']		= $ShippingOptions[$f['isexpressmailrequired']];
+	$f['wire_transfer_fee']			= $Settings['wire_transfer_fee'];
+	$f['currency']					= $Settings['currency'];
+	$f['service']					= getNameById($f['area_id'],'rates','name'); 
+	$f['discount_amount']			= round($f['estimatedprice'] * ($f['discount']/100),2);
+	$f['online_amount']				= $f['estimatedprice']-$f['discount_amount'];
+	$f['invoicedate']				= date("F d, Y",$microtime); 
+	$f['duedate']					= date("F d, Y",$microtime+86400*10);
+	$f['total_due']					= round($f['estimatedprice'] - $f['discount_amount'] - $f['amountpaid']);
 
-        $action = "popupclose";
-        $title  = "Graphical View";
+    header('Content-Description: File Transfer');
+    header('Content-Type: application/rtf');
+    header('Content-Disposition: attachment; filename='.basename($filename));
+    header('Content-Transfer-Encoding: binary');
+    header('Expires: 0');
+    header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+    header('Pragma: public');
 
-        break;
+	echo ApplyTemplate("invoice.rtf",$f);
+	die();
 
-// Отображение статистики
-    case "stats":
+	break;
 
-        $action = "stats";
-        $title  = "Different stats";
+// Îòïðàâêà ïèñüìà
+case "do_send":
 
-        break;
+	$action = "view";
+	$sendemailvisibility = "none";
 
-// AJAX. Изменения значения 
-    case "changevalue":
+	$title = "Status of Request";
+	if (sendmail2()) {
 
-        $table   = $_GET['section'];
-        $request = parse_url($_SERVER['REQUEST_URI']);
-        parse_str($request['query'], $details);
+		$details = array(
+		"baseppw" => $_POST['baseppw'],
+		"status_id" => $_POST['status_id']+1,
+		"id" => $_GET['id']
+		);
 
-        if (ChangeValue()) {
-            echo "OK";
-            exit;
-        }
+		edit_data(&$details, $_GET['section']);
+	}
 
-        break;
+	$title = "View";
+	$f = @RunQueryReturnDataArray ($section, "WHERE id=$_GET[id]");
 
-// Страница изменения пароля
-    case "login":
+	if ($section == "requests" && $f['estimatedprice']>0 && $f['status_id']==3) $baseppw = $f['ppwt'];
+		elseif ($section == "requests" && $f['estimatedprice']>0) $baseppw = round($f['estimatedprice']/$f['wordcount'],4);
+		else $baseppw = $calculator['baseppw'];
 
-        $action = "login";
-        $title  = "Password change";
+	break;
 
-        $f = RunQueryReturnDataArray($section, "WHERE `id` = $_SESSION[staff_id]");
+// Îòïðàâêà ïèñüìà
+case "do_sendnewsletter":
 
-        break;
+	sendnewsletters();
 
-// Мой аккаунт
-    case "mydetails":
+	$action = "view";
+	$f = @RunQueryReturnDataArray ($section, "WHERE id=$_GET[id]");
+	$title = "Status of Request";
 
-        $action = "mydetails";
-        $title  = "My details";
+	break;
 
-        $f = RunQueryReturnDataArray($section, "WHERE `id` = $_SESSION[staff_id]");
+// Ñòðàíèöà çàêðûòèÿ âñïëûâàþùåãî îêíà
+case "popupclose":
 
-        break;
+	$action = "popupclose";
+	$title = "Graphical View";
 
-// Страница c банковской информацией
-    case "bankdetails":
+	break;
 
-        $action = "bankdetails";
-        $title  = "Bank details";
+// Îòîáðàæåíèå ñòàòèñòèêè
+case "stats":
 
-        $f = RunQueryReturnDataArray($section, "WHERE `id` = 1");
+	$action = "stats";
+	$title = "Different stats";
 
-        break;
+	break;
 
-// Фактическое удаление объекта
-    case "delete":
+// AJAX. Èçìåíåíèÿ çíà÷åíèÿ 
+case "changevalue":
 
-        // DEMO VERSION LIMITATIONS
+	$table = $_GET['section'];
+	$request = parse_url($_SERVER['REQUEST_URI']);
+	parse_str($request['query'], $details);
 
-        // $title = "DEMONSTRATION VERSION LIMITATIONS";
+	if (ChangeValue()) {echo "OK"; exit;}
 
-        /* if ($section == "status" || $section == "templates") {
+	break;
 
-            $error_msg = "Sorry. This feature is disabled in the demo-version";
-            $section   = "default";
-            $action    = "demo";
+// Ñòðàíèöà èçìåíåíèÿ ïàðîëÿ
+case "login":
 
-        } else { */
+	$action = "login";
+	$title = "Password change";
 
-            if (delete_data("id", $section, $_GET['id'])) {
+	$f = RunQueryReturnDataArray($section, "WHERE `id` = $_SESSION[staff_id]");
 
-                delete_files($_GET['id']);
-                header("Location: {$siteurl}$section/");
+	break;
 
-            } else {
+// Ìîé àêêàóíò
+case "mydetails":
 
-                $title     = "Error";
-                $error_msg = "Changes where <B>NOT MADE</B>. Please call to support and state the following: " . mysql_errno() . mysql_error();
+	$action = "mydetails";
+	$title = "My details";
 
-            }
+	$f = RunQueryReturnDataArray($section, "WHERE `id` = $_SESSION[staff_id]");
 
-       /* } */
+	break;
 
-        break;
+// Ñòðàíèöà c áàíêîâñêîé èíôîðìàöèåé
+case "bankdetails":
 
-// Выполнение запроса к базе данных
-    case "do_runquery":
+	$action = "bankdetails";
+	$title = "Bank details";
 
-        $action    = "default";
-        $error_msg = $translation['137'];
+	$f = RunQueryReturnDataArray($section, "WHERE `id` = 1");
 
-        $title = "Developers corner";
+	break;
 
-        // Don't change here
-        if (mysql_query($_POST['sql'])) return 1; else {
-            $error_msg = $translation['138'] . mysql_errno() . ": " . mysql_error();
+// Ôàêòè÷åñêîå óäàëåíèå îáúåêòà
+case "delete":
 
-            return 0;
-        }
-        // Don't change here */
+	// DEMO VERSION LIMITATIONS
 
+	$title = "DEMONSTRATION VERSION LIMITATIONS";
 
-        break;
+	if ($section == "status" || $section == "templates") {
+
+		$error_msg = "Sorry. This feature is disabled in the demo-version";
+		$section = "default";
+		$action = "demo";
+
+	}
+
+		else
+
+			{
+
+			if (delete_data("id", $section, $_GET['id'])) {
+
+				delete_files($_GET['id']);
+				header("Location: {$siteurl}$section/");
+
+			}	
+			
+			else {
+
+				$title = "Error";
+				$error_msg = "Changes where <B>NOT MADE</B>. Please call to support and state the following: " . mysql_errno() . mysql_error();
+
+			}
+
+			}
+
+	break;
+
+// Âûïîëíåíèå çàïðîñà ê áàçå äàííûõ
+case "do_runquery":
+
+		$action = "default";
+		$error_msg = $translation['137'];
+
+		$title = "Developers corner";
+
+		// Don't change here
+		if (mysql_query($_POST['sql'])) return 1; else { $error_msg = $translation['138'] . mysql_errno() . ": " .mysql_error();  return 0; }
+		// Don't change here */
+
+
+	break;
 
 }
 ?>

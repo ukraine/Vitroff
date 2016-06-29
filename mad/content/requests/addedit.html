@@ -1,233 +1,202 @@
-<?php $rq_trans = new RequestTranslator(); ?>
-<?php $request_id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_NUMBER_INT); ?>
-
 <br><br>
 
 <div class="listtabs">
 	<span>
-		<a href="/mad/requests/view/<?= $f['id']; ?>" style='margin-right: 25px; background: #91BFEE; color: white;'>View</a>
-        <a href="javascript:void(0)" onclick="switchTab('0')" id="tab0" class="activeTab">General</a>
+		<a href="/mad/requests/view/<? echo $f["id"]; ?>" style='margin-right: 25px; background: #91BFEE; color: white;'>View</a> 
+		<a href="javascript:void(0)" onclick="switchTab('0')" id="tab0" class="activeTab">General</a> 
 		<a href="javascript:void(0)" onclick="switchTab('1')" id="tab1" class="">Billing</a> 
 		<a href="javascript:void(0)" onclick="switchTab('2')" id="tab2" class="">Staff</a>
 		<a href="javascript:void(0)" onclick="switchTab('3')" id="tab3" class="">Files</a>
 	</span>
 
-    <span id='cpanelenable'><a href='javascript:void(0)' onclick="toggle_visibility('cpanel')">add new customer,
-        translator, etc</a></span>
+	<span id='cpanelenable'><a href='javascript:void(0)' onclick="toggle_visibility('cpanel')">add new customer, translator, etc</a></span>
 </div>
 
 <div id="cpanel" style='display:none;'>
-    <div class="popup" onClick="MM_openBrWindow('/mad/pairs/add/?pagetemplate=popup','width=380,height=220')" id="pair">
-        add a new language pair
-    </div>
-    <div class="popup" onClick="MM_openBrWindow('/mad/languages/add/?pagetemplate=popup','width=420,height=220')"
-         id="language">add a new language
-    </div>
-    <div class="popup" onClick="MM_openBrWindow('/mad/rates/add/?pagetemplate=popup','width=450,height=245')" id="rate">
-        add a new type
-    </div>
-    <div class="popup" onClick="MM_openBrWindow('/mad/customers/add/?pagetemplate=popup','width=550,height=845')"
-         id="customer">add a new customer
-    </div>
-    <div class="popup"
-         onClick="MM_openBrWindow('/mad/translators/add/?pagetemplate=popup','width=840,height=600','yes')"
-         id="translator">add a new translator
-    </div>
+	<div class="popup" onClick="MM_openBrWindow('/mad/pairs/add/?pagetemplate=popup','width=380,height=220')" id="pair">add a new language pair</div>
+	<div class="popup" onClick="MM_openBrWindow('/mad/languages/add/?pagetemplate=popup','width=420,height=220')" id="language">add a new language</div>
+	<div class="popup" onClick="MM_openBrWindow('/mad/rates/add/?pagetemplate=popup','width=450,height=245')" id="rate">add a new type</div>
+	<div class="popup" onClick="MM_openBrWindow('/mad/customers/add/?pagetemplate=popup','width=550,height=845')" id="customer">add a new customer</div>
+	<div class="popup" onClick="MM_openBrWindow('/mad/translators/add/?pagetemplate=popup','width=840,height=600','yes')" id="translator">add a new translator</div>
 </div>
 
 <form method="post" action="" enctype="multipart/form-data" name="form">
 
-<div class="tab-panes">
+	<div class="tab-panes">
 
-    <!-- Pane 0 -->
-    <div class="divtabs" id="pane0">
+		<!-- Pane 0 -->
+		<div class="divtabs" id="pane0">
 
 
-        <TABLE>
-            <TR>
-                <TD width="50%">
+<TABLE>
+<TR>
+	<TD width="50%">
+	
+	<h4 id="first">General info:</h4>
+		
+			<? echo GenerateSelectList("status", "status_id", "name"); ?> Select status	<br><br>
+			<select name="language_pair"><? include "../shared/select_language_pair.html"; ?></select> &nbsp; Language pair &nbsp;&nbsp; <br>
+			<? echo GenerateSelectList("rates", "area_id", "name"); ?> Select type <br>
+	
+			<? GenerateInputTag("deadline","Deadline") ?> 
+				<script type="text/javascript">
+					calendar.set("labeldeadline");
+				</script>
 
-                    <h4 id="first">General info:</h4>
-
-                    <? echo GenerateSelectList("status", "status_id", "name"); ?> Select status <br><br>
-                    <select name="language_pair"><? include "../inc/shared/select_language_pair.html"; ?></select>
-                    &nbsp; Language pair &nbsp;&nbsp; <br>
-                    <? echo GenerateSelectList("rates", "area_id", "name"); ?> Select type <br>
-
-                    <? GenerateInputTag("deadline","Deadline") ?>
-                    <script type="text/javascript">
-                        calendar.set("labeldeadline");
-                    </script>
-
-                    <br>
-
-                    <!-- Выбор клиента -->
-                    <select name="customer_id"><?
+			<br>
+			
+			<!-- Выбор клиента -->
+			<select name="customer_id"><? 
 
 				$res = mysql_query("select * from `customers` ORDER BY `lastname`");
 				while($col = mysql_fetch_array($res)) {
 					echo "\t\t\t<option value=".$col['id']."";
 					select('customer_id', $col['id']);
 					echo ">$col[lastname] $col[firstname]</option>\n";
-                        }
-                        ?></select> &nbsp; Choose customer
-                    <!-- Выбор клиента -->
+				}
+			?></select> &nbsp; Choose customer 
+			<!-- Выбор клиента -->
 
-                    <? GenerateInputTag("customer_project_id", "Customer's project ID if any"); ?><br>
+			<? GenerateInputTag("customer_project_id", "Customer's project ID if any"); ?><br>
+	
+	</TD>
+	<TD valign="top" id='instructions'>
+				
+	<h4 id="first"><a name="notes"></a>Additional instructions by customer:</h4>
+	<? GenerateTextAreaTag("instructions"); ?>
+			
+	</TD>
+</TR>
 
-                </TD>
-                <TD valign="top" id='instructions'>
+<TR>
+				<TD valign="top">
 
-                    <h4 id="first"><a name="notes"></a>Additional instructions by customer:</h4>
-                    <? GenerateTextAreaTag("instructions"); ?>
+			<h4 id="first">Options:</h4>
 
-                </TD>
-            </TR>
-
-            <TR>
-                <TD valign="top">
-
-                    <h4 id="first">Options:</h4>
-
-                    <?
+			<?
 
 			$ProofreaderPaymentStatusCheckBox = array(
 
 				"isprojectactive" => "Active",
-                    "iscertificationrequired" => "Certification is requried",
-                    "isnotarizationrequired" => "Notarization is requried",
-                    "isscanrequired" => "Scan is requried",
-                    "isexpressmailrequired" => "Overnight shipping is requried",
-                    "istranslationmemory" => "Translation memory",
+				"iscertificationrequired" => "Certification is requried",
+				"isnotarizationrequired" => "Notarization is requried",
+				"isscanrequired" => "Scan is requried",
+				"isexpressmailrequired" => "Overnight shipping is requried",
+				"istranslationmemory" => "Translation memory",
 
-                    );
+			);
 
-                    GenerateCheckBoxV2($ProofreaderPaymentStatusCheckBox,"","<br/>","style='width:auto;'");
+			GenerateCheckBoxV2($ProofreaderPaymentStatusCheckBox,"","<br/>","style='width:auto;'");
 
-                    ?> <br>
-                    <?
+			?> <br>
+			<? 
 			GenerateInputTag("postal_tracking_number", "Shipment tracking number"); 
-			echo @"<div style='margin-left: 17px;'><a href='$trackingUtils[usps]{$f[postal_tracking_number]}'
-                                                      target='_blank'>Track</a>
-    </div>
-    ";
-    ?>
+			echo @"<div style='margin-left: 17px;'><a href='$trackingUtils[usps]{$f[postal_tracking_number]}' target='_blank'>Track</a></div>";
+			?>
 
-    </TD>
+				</TD>
 
-    <TD valign="top">
-        <h4 id="first"><a name="notes"></a>Special notes (visible by admin only)</h4>
-        <? GenerateTextAreaTag("comments"); ?>
-    </TD>
+				<TD valign="top">
+					<h4 id="first"><a name="notes"></a>Special notes (visible by admin only)</h4>
+					<? GenerateTextAreaTag("comments"); ?>
+				</TD>
 
-    </TR>
-    </TABLE>
+</TR>
+</TABLE>
 
-</div>
-<!-- /Pane 0 -->
+		</div>
+		<!-- /Pane 0 -->
 
-<!-- Pane 1 -->
-<div class="divtabs" id="pane1">
+		<!-- Pane 1 -->
+		<div class="divtabs" id="pane1">
 
 
-    <TABLE>
-        <TR>
-            <TD width="50%">
+<TABLE>
+<TR>
+	<TD width="50%">
 
-                <!-- Выбор ориентировочной цены, фактически оплаченной суммы и/или цены за слово -->
-                <H4 id="first">Billing and project info</H4>
+						<!-- Выбор ориентировочной цены, фактически оплаченной суммы и/или цены за слово -->
+						<H4 id="first">Billing and project info</H4>
 
-                <?
+						<? 
 						GenerateInputTag("wordcount", "Number of words"); 
 						GenerateInputTag("characters","Number of characters");
-						GenerateInputTag("ppw","Customer's price per word","text"," &nbsp; ","<br>
-                ","onkeyup='CalculatePrice(this.value,\"ppw\")'");
-                ?>
+						GenerateInputTag("ppw","Customer's price per word","text"," &nbsp; ","<br>","onkeyup='CalculatePrice(this.value,\"ppw\")'");
+						?>
 
-                <br>
+						<br>
 
-                <?
+						<?
 						$PostPaymentBox = array("postpayment" => "Post payment");
-                GenerateCheckBoxV2($PostPaymentBox,"","","style='width:auto;'");
+						GenerateCheckBoxV2($PostPaymentBox,"","","style='width:auto;'");
 
-                ?>
-                <br><br>
-                <?
+						?>
+						<br><br>
+						<?
 
-						GenerateInputTag("estimatedprice","Estimated price","text"," &nbsp; ","<br>
-                ","onkeyup='FixDotComa(\"estimatedprice\")'");
-                GenerateInputTag("discount","Discount","text"," &nbsp; ","<br>","onkeyup='CalculateDiscountedPrice(this.value,\"discount\")'");
-                ?>
-                <br>
-                <?
-						GenerateInputTag("amountpaid","Actual price","text"," &nbsp; ","<br>
-                ","onkeyup='FixDotComa(\"amountpaid\")'");
-                GenerateInputTag("transaction_id","Payment Transaction Unique ID");
-                echo @"
-                <div style='margin-left: 17px;'><a
-                        href='https://www.paypal.com/us/cgi-bin/webscr?cmd=_view-a-trans&id={$f[transaction_id]}'
-                        target='_blank'>View</a></div>
-                ";
-                ?>
+						GenerateInputTag("estimatedprice","Estimated price","text"," &nbsp; ","<br>","onkeyup='FixDotComa(\"estimatedprice\")'");
+						GenerateInputTag("discount","Discount","text"," &nbsp; ","<br>","onkeyup='CalculateDiscountedPrice(this.value,\"discount\")'");
+						?>
+						<br>
+						<?
+						GenerateInputTag("amountpaid","Actual price","text"," &nbsp; ","<br>","onkeyup='FixDotComa(\"amountpaid\")'");
+						GenerateInputTag("transaction_id","Payment Transaction Unique ID");
+						echo @"<div style='margin-left: 17px;'><a href='https://www.paypal.com/us/cgi-bin/webscr?cmd=_view-a-trans&id={$f[transaction_id]}' target='_blank'>View</a></div>";
+						?>
 
 
-            </td>
+	</td>
 
-        </TR>
-    </TABLE>
+</TR>
+</TABLE>
 
-</div>
-<!-- /Pane 1 -->
-
-
-<!-- Pane 2 -->
-<div class="divtabs" id="pane2">
+		</div>
+		<!-- /Pane 1 -->
 
 
-    <h4 id="first"><a name="translator"></a>Translator & Proofreader:</h4>
+		<!-- Pane 2 -->
+		<div class="divtabs" id="pane2">
 
-    <div class="col1">
+		<h4 id="first"><a name="translator"></a>Translator & Proofreader:</h4>
 
-        <!-- Выбор переводчика -->
+		<!-- Выбор переводчика -->
 
-        <select name="translator_id">
-            <option value="0">Assign translator...</option>
-            <?
+		<select name="translator_id">
+		<option value="0">Assign translator...</option>
+		<?
 		$res = mysql_query("select * from `translators` /* WHERE `language_pair` = $f[language_pair]*/ ORDER BY `lastname`");
 		while($col = mysql_fetch_array($res))
 			{
 				echo "\t\t\t<option value=".$col['id']."";
 				select('translator_id', $col['id']);
 				echo ">$col[lastname] $col[firstname]</option>\n";
-            }
+			}
 
-            ?>
-        </select> &nbsp; Select translator &nbsp; &nbsp;
+		?>
+		</select> &nbsp; Select translator  &nbsp; &nbsp; 
 
 
-        <!-- Указание данных о переводчике -->
+		<!-- Указание данных о переводчике -->
 
-        <br><? GenerateInputTag("ppwt","Translator's price","text"," &nbsp; ","<br>
-        ","onkeyup='CalculatePrice(this.value,\"ppwt\")'"); ?>
+			<br><? GenerateInputTag("ppwt","Translator's price","text"," &nbsp; ","<br>","onkeyup='CalculatePrice(this.value,\"ppwt\")'"); ?> 
 
-        <!-- JS Календаря для выбора дедлайна для переводчика -->
-        <? GenerateInputTag("deadline_translator","Deadline for translator"); ?>
+		<!-- JS Календаря для выбора дедлайна для переводчика -->
+				<? GenerateInputTag("deadline_translator","Deadline for translator"); ?>
+						
+					<script type="text/javascript">
+						calendar.set("labeldeadline_translator");
+					</script>
+							
+				<?
+					$TranslatorPaymentStatusCheckBox = array("translator_paid" => "Check here if the money were sent to worker");
+					GenerateCheckBoxV2($TranslatorPaymentStatusCheckBox,"","","style='width:auto;'");
+				?>
+					
+		<!-- Выбор проверяльщика -->
 
-        <script type="text/javascript">
-            calendar.set("labeldeadline_translator");
-        </script>
-
-        <?
-					$TranslatorPaymentStatusCheckBox = array("translator_paid" => "Check here if the money were sent to
-        worker");
-        GenerateCheckBoxV2($TranslatorPaymentStatusCheckBox,"","","style='width:auto;'");
-        ?>
-
-        <!-- Выбор проверяльщика -->
-
-        <br><br><select name="proofreader_id">
-        <option value="0">Assign proofreader...</option>
-        <?
+ 		<br><br><select name="proofreader_id">
+		<option value="0">Assign proofreader...</option>
+		<?
 
 		$res = mysql_query("select * from `translators` /* WHERE `language_pair` = $f[language_pair] */ ORDER BY `lastname`");
 		while($col = mysql_fetch_array($res))
@@ -235,90 +204,81 @@
 				echo "\t\t\t<option value=".$col['id']."";
 				select('proofreader_id', $col['id']);
 				echo ">$col[lastname] $col[firstname]</option>\n";
-        }
+			}
 
-        ?>
-    </select> &nbsp; Select proofreader
+		?>
+		</select> &nbsp; Select proofreader 
 
-        <br><? GenerateInputTag("ppwp","Proofreader's price","text"," &nbsp; ","<br>
-        ","onkeyup='CalculatePrice(this.value,\"ppwp\")'"); ?>
+			<br><? GenerateInputTag("ppwp","Proofreader's price","text"," &nbsp; ","<br>","onkeyup='CalculatePrice(this.value,\"ppwp\")'"); ?>
 
-        <?
+			<? 
+			
+			$ProofreaderPaymentStatusCheckBox = array("proofreader_paid" => "Check here if the money were sent to worker");
+			GenerateInputTag("deadline_proofreader","Deadline for proofreader");?>
 
-			$ProofreaderPaymentStatusCheckBox = array("proofreader_paid" => "Check here if the money were sent to
-        worker");
-        GenerateInputTag("deadline_proofreader","Deadline for proofreader");?>
+					<script type="text/javascript">
+						calendar.set("labeldeadline_proofreader");
+					</script>
 
-        <script type="text/javascript">
-            calendar.set("labeldeadline_proofreader");
-        </script>
+			<?
 
-        <?
 			GenerateCheckBoxV2($ProofreaderPaymentStatusCheckBox,"","","style='width:auto;'");
+
 			?>
-    </div>
-    <div class="col2">
-        <?php execute_action("list_more_translators"); ?>
-    </div>
-
-    <div class="clearfix"></div>
-</div>
-<!-- /Pane 2 -->
+			
 
 
-<!-- Pane 3 -->
-<div class="divtabs" id="pane3">
-
-    <!-- Аттач исходных файлов -->
-    <h4 id="first"><a name="source"></a>Phase 1 - Source text:</h4>
-
-    <div style="padding: 0 0 5px 19px;" id="sourcefilesblock">
-        <? getRequestFiles($f['id']); ?>
-    </div>
-
-    <div id="uploadsourceform"><input type="file" name="uploadfile[1][1]"></div>
-    &nbsp; &nbsp; &nbsp; <span class="javascriptlink" onclick="ShowUploadForm('uploadsourceform','1')">Attach another file</span>
-
-    <br><br> &nbsp; &nbsp; &nbsp; or copy paste the source text:
-    <span style="margin-left: 325px; display: <? echo $displayitwithsourcetext; ?>" class="javascriptlink"
-          onClick="saveasfile('<? ifExistGetValue('id'); ?>');" title="Save the source text as a file">Attach the following text as file</span>
-    <br><? GenerateTextAreaTag("source_text"); ?>
-    <br><span style="margin-left: 513px; display: <? echo $displayitwithsourcetext; ?>" class="javascriptlink"
-              onClick="countwordsandchars();" title="Count words & characters in the source text, if available">Count words & characters</span>
-
-    <!-- Аттач проверенных файлов -->
-
-    <h4><a name="translation"></a>Phase 2 - Proofreading:</h4>
-
-    <div style="padding: 0 0 5px 19px;">
-        <? getRequestFiles($f['id'], "2"); ?>
-    </div>
-
-    <div id="uploadproofreadingform"><input type="file" name="uploadfile[2][1]"></div>
-    &nbsp; &nbsp; &nbsp; <span class="javascriptlink" onclick="ShowUploadForm('uploadproofreadingform','2')">Attach another file</span>
-
-    <!-- <br>  &nbsp; &nbsp; &nbsp;  or copy paste the translated text:
-    <br><? GenerateTextAreaTag("proofreading"); ?> -->
+		</div>
+		<!-- /Pane 2 -->
 
 
-    <!-- Аттач финала файла -->
+		<!-- Pane 3 -->
+		<div class="divtabs" id="pane3">
 
-    <h4><a name="translation"></a>Phase 3 - Final Translation:</h4>
+		<!-- Аттач исходных файлов -->
+		<h4 id="first"><a name="source"></a>Phase 1 - Source text:</h4>
 
-    <div style="padding: 0 0 5px 19px;">
-        <? getRequestFiles($f['id'], "3"); ?>
-    </div>
+			<div style="padding: 0 0 5px 19px;" id="sourcefilesblock">
+				<? getRequestFiles($f['id']); ?>
+			</div>
 
-    <div id="uploadtranslationform"><input type="file" name="uploadfile[3][1]"></div>
-    &nbsp; &nbsp; &nbsp; <span class="javascriptlink" onclick="ShowUploadForm('uploadtranslationform','3')">Attach another file</span>
+			<div id="uploadsourceform"><input type="file" name="uploadfile[1][1]"></div>
+			&nbsp; &nbsp; &nbsp; <span class="javascriptlink" onclick="ShowUploadForm('uploadsourceform','1')">Attach another file</span>
 
-</div>
-</div>
+ 			<br><br>  &nbsp; &nbsp; &nbsp;  or copy paste the source text: 
+			<span style="margin-left: 325px; display: <? echo $displayitwithsourcetext; ?>" class="javascriptlink" onClick="saveasfile('<? ifExistGetValue('id'); ?>');" title="Save the source text as a file">Attach the following text as file</span>
+			<br><? GenerateTextAreaTag("source_text"); ?>
+			<br><span style="margin-left: 513px; display: <? echo $displayitwithsourcetext; ?>" class="javascriptlink" onClick="countwordsandchars();" title="Count words & characters in the source text, if available">Count words & characters</span>
+
+		<!-- Аттач проверенных файлов -->
+
+		<h4><a name="translation"></a>Phase 2 - Proofreading:</h4>
+
+			<div style="padding: 0 0 5px 19px;">
+				<? getRequestFiles($f['id'], "2"); ?>
+			</div>
+
+			<div id="uploadproofreadingform"><input type="file" name="uploadfile[2][1]"></div>
+			&nbsp; &nbsp; &nbsp; <span class="javascriptlink" onclick="ShowUploadForm('uploadproofreadingform','2')">Attach another file</span>
+
+			<!-- <br>  &nbsp; &nbsp; &nbsp;  or copy paste the translated text: 
+			<br><? GenerateTextAreaTag("proofreading"); ?> -->
+
+
+		<!-- Аттач финала файла -->
+
+		<h4><a name="translation"></a>Phase 3 - Final Translation:</h4>
+
+			<div style="padding: 0 0 5px 19px;">
+				<? getRequestFiles($f['id'], "3"); ?>
+			</div>
+
+			<div id="uploadtranslationform"><input type="file" name="uploadfile[3][1]"></div>
+			&nbsp; &nbsp; &nbsp; <span class="javascriptlink" onclick="ShowUploadForm('uploadtranslationform','3')">Attach another file</span>
+
+		</div>
+		</div>
 
 <? include "inc/formend.html"; ?>
 
 </form>
-
-<!-- modal dialog: assign translator -->
-<?php execute_action("after_staff_tab_modal"); ?>
-

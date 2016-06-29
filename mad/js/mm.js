@@ -340,3 +340,13 @@ function movehint(e) {
 function hidehint() {  
 	hintcontainer.style.display="none";  
 }
+
+function getHours(totalAmount,defaultPricePerHour) {
+
+	totalHours = totalAmount/defaultPricePerHour;
+	dailyHours = Math.round(totalHours/22);
+
+	document.forms[0].numberOfHours.value		= totalHours
+	document.forms[0].numberOfHoursDaily.value	= dailyHours
+
+}

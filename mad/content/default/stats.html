@@ -82,16 +82,17 @@
 		<TD>$i</TD>
 		<TD class='received'><B>$result[NumberOfOrders]</B></TD>
 		<TD>" . round($result['NumberOfOrders']/$months,2) . "</TD>
-		<TD class='received'>$$result[totalAmountPaid]</TD>
+		<TD class='received' title='" . round($result['totalAmountPaid'] * 100 / $totalAmountPrevYear,2) . "%'>$$result[totalAmountPaid]</TD>
 		<TD>$" . round($result['totalAmountPaid']/$months,2) . "</TD>
-		<TD class='fees'>$$result[PayPalFees]</TD>
-		<TD class='fees'>$$result[workerFees]</TD>
-		<TD class='fees'><B>$$totalFees</B></TD>
+		<TD class='fees' title='$" . round($result['PayPalFees']/$months,2) . " - avg monthly'>$$result[PayPalFees]</TD>
+		<TD class='fees' title='$" . round($result['workerFees']/$months,2) . " - avg monthly'>$$result[workerFees]</TD>
+		<TD class='fees' title='$" . round($totalFees/$months,2) . " - avg monthly'><B>$$totalFees</B></TD>
 		<TD class='ratio'><B>" . round($result['NetAmount']/$totalFees,2) . "</B></TD>
 		<TD class='ratio'><B>$" . round($result['NetAmount']/$result['NumberOfOrders'],2) . "</B></TD>
 		<TD class='net'><B>$$result[NetAmount]</B> <span title='Estimate by the end of the year'>$forecast</span></TD>
 	</TR>";
 
+	$totalAmountPrevYear = $result['totalAmountPaid'];
 			
 	}
 	?>

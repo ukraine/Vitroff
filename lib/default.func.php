@@ -1,77 +1,80 @@
 <?
 
-// Вставка данных
-function insert_data($details, $table, $keys = "", $values = "")
-{
+// пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
+function insert_data ($details, $table, $keys="", $values="") {
 
-    global $ForbiddenChars, $AllowedChars;
+	global $ForbiddenChars, $AllowedChars;
 
-    foreach ($details as $key => $val) {
-        if
+	foreach($details as $key=>$val)
 
-        (
-            $key !== "section"
-            && $key !== "action"
-            && $key !== "submit"
-            && $key !== "Submit"
-            && $key !== "dosometh"
-            && $key !== "id"
-            && $key !== "months"
-            && $key !== "years"
-            && $key !== "timestamp"
-            && $key !== "file"
-        ) {
-            $keys .= "`$key`,";
-            $values .= "'" . trim(str_replace($ForbiddenChars, $AllowedChars, $val)) . "',";
-        }
-    }
+		{
+			if 
+			
+			(
+				   $key !== "section" 
+				&& $key !== "action" 
+				&& $key !== "submit" 
+				&& $key !== "Submit" 
+				&& $key !== "dosometh" 
+				&& $key !== "id" 
+				&& $key !== "months" 
+				&& $key !== "years" 
+				&& $key !== "timestamp"
+				&& $key !== "file"			
+			) 
+					
+			{
+				$keys .="`$key`,"; $values .= "'".trim(str_replace($ForbiddenChars, $AllowedChars, $val))."',";
+			}
+		}
 
-    $strlenkey = strlen($keys);
-    $keys      = substr($keys, 0, $strlenkey - 1);
+	$strlenkey = strlen($keys);
+	$keys = substr($keys, 0, $strlenkey-1);
 
-    $strlenval = strlen($values);
-    $values    = substr($values, 0, $strlenval - 1);
+	$strlenval = strlen($values);
+	$values = substr($values, 0, $strlenval-1);
 
-    $sql = "INSERT INTO `$table` ($keys) VALUES ($values)";
+	$sql = "INSERT INTO `$table` ($keys) VALUES ($values)";
 
-    // echo $sql."<BR>";
+	// echo $sql."<BR>";
 
-    // Don't change here
-    if (mysql_query($sql)) return 1; else return 0;
-    // Don't change here */
-
+	// Don't change here
+	if (mysql_query($sql)) return 1; else return 0;
+	// Don't change here */
+	
 }
 
 
-// Редактирование данных
-function edit_data(&$details, &$table)
-{
+// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
+function edit_data ($details, $table) {
 
-    global $sqlset, $ForbiddenChars, $AllowedChars;
+	global $sqlset, $ForbiddenChars, $AllowedChars;
 
-    foreach ($details as $key => $val) {
-        if
+	foreach($details as $key=>$val)
 
-        (
-            $key !== "section"
-            && $key !== "action"
-            && $key !== "submit"
-            && $key !== "Submit"
-            && $key !== "dosometh"
-            && $key !== "id"
-            && $key !== "months"
-            && $key !== "years"
-            && $key !== "sid"
-            && $key !== "file"
-        )
+			{
+				if
 
-            $sqlset .= "`$key` = '" . trim(str_replace($ForbiddenChars, $AllowedChars, $val)) . "',";
-    }
+				(
+					$key !== "section" 
+					&& $key !== "action" 
+					&& $key !== "submit" 
+					&& $key !== "Submit" 
+					&& $key !== "dosometh" 
+					&& $key !== "id" 
+					&& $key !== "months" 
+					&& $key !== "years" 
+					&& $key !== "sid" 
+					&& $key !== "file"
+				)
 
-    $strlenset = strlen($sqlset);
-    $sqlset    = substr($sqlset, 0, $strlenset - 1);
+				$sqlset .="`$key` = '".trim(str_replace($ForbiddenChars, $AllowedChars, $val))."',";
+			}
 
-    $sql = "
+	$strlenset = strlen($sqlset);
+	$sqlset = substr($sqlset, 0, $strlenset-1);
+
+		$sql	=	"
 					
 					
 					UPDATE `$table` SET 
@@ -80,23 +83,22 @@ function edit_data(&$details, &$table)
 				
 					";
 
-    // echo $sql."<BR>";
+	// echo $sql."<BR>";
 
-    // Don't change here
-    if (mysql_query($sql)) return 1; else return 0;
-    // Don't change here
+	// Don't change here
+	if (mysql_query($sql)) return 1; else return 0;
+	// Don't change here
 
 }
 
-// Удаление данных
-function delete_data($what, $where, $id)
-{
+// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
+function delete_data ($what, $where, $id) {
 
-    $sql = "DELETE FROM `$where` WHERE `$what` = '$id'";
+	$sql	= "DELETE FROM `$where` WHERE `$what` = '$id'";
 
-    // Don't change here
-    if (mysql_query($sql)) return 1; else return 0;
-    // Don't change here
+	// Don't change here
+	if (mysql_query($sql)) return 1; else return 0;
+	// Don't change here
 
 }
 

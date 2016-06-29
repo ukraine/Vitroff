@@ -71,7 +71,7 @@ global $AllowedChars, $ForbiddenChars;
 	Estimated price: $f[estimatedprice] ----- 
 	Actual amount: $f[amountpaid] -->
 	
-	<td class='columns1'><div id='90'><a href='view/$f[id]' 
+	<td class='columns1'><div id='90'>$f[amountpaid] <a href='view/$f[id]' 
 
 	onmouseover=\"hint(this,'Area: <B>" . getNameById($f['area_id'],'rates','name') . "</B><br>Word count: <B>$f[wordcount]</B> <br>Estimated ppw <B>" . round($f['estimatedprice']/$f['wordcount'], 2) . "</B>  <br>Estimated price: <B>$f[estimatedprice]</B> <br>Actual amount: <B>$f[amountpaid]</B><br><br><B>". str_replace("\r\n","<br>",htmlspecialchars($f['comments'])) . "</B> ')\" 
 	
@@ -92,9 +92,7 @@ global $AllowedChars, $ForbiddenChars;
 	
 	onmouseover=\"hint(this,'Total: <B>$" . $f['ppwp'] * $f['wordcount'] . "</B> = $$f[ppwp] x $f[wordcount] <br> PPW: <b>$$f[ppwp]</b>')\" 
 
-	>".limitVisiblePart(getNameById($f['proofreader_id'],'translators','lastname')." ".getNameById($f['proofreader_id'],'translators','firstname'))."</a>";
-        execute_action("after_translator_in_project_list");
-        echo "
+	>".limitVisiblePart(getNameById($f['proofreader_id'],'translators','lastname')." ".getNameById($f['proofreader_id'],'translators','firstname'))."</a>
 	</td>
 	<td class='columns1' id='execute'>$actionrequired</td>
 	<td class='columns1'><img src='../img/status/$f[status_id].gif' title='$statusname'></td>

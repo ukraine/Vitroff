@@ -1,5 +1,7 @@
 <?
 
+error_reporting(E_ALL);
+
 // Подключаемся к БД
 include "../lib/configs.php";
 
@@ -83,7 +85,7 @@ function ChangeValue() {
 	global $details, $table;
 
 	$details["id"] = $_REQUEST['id'];
-	edit_data ($details, $table);
+	edit_data (&$details, &$table);
 
 	return 1;
 
@@ -259,8 +261,7 @@ function SaveSourceIntofile($id) {
 		$request['id'] = $id;
 
 		// Удаляем исходный текст из таблицы
-    $req = "requests";
-		edit_data ($request, $req);
+		edit_data ($request, "requests");
 
 }
 
@@ -366,8 +367,8 @@ function getLanguagePairById(&$id) {
 
 		$f = RunQueryReturnDataArray ("pairs", "WHERE id=$id");
 
-		$source = GetNameById ($f['source'], 'languages', 'name');
-		$target = GetNameById ($f['target'], 'languages', 'name');
+		$source = GetNameById (&$f['source'], 'languages', 'name');
+		$target = GetNameById (&$f['target'], 'languages', 'name');
 		$result = $source ." > ". $target;
 
 	return $result;
@@ -381,8 +382,8 @@ function getLanguagePairCodesById(&$id) {
 
 		$f = RunQueryReturnDataArray ("pairs", "WHERE id=$id");
 
-		$source = GetNameById ($f['source'], 'languages', 'code');
-		$target = GetNameById ($f['target'], 'languages', 'code');
+		$source = GetNameById (&$f['source'], 'languages', 'code');
+		$target = GetNameById (&$f['target'], 'languages', 'code');
 		$result = $source ."-". $target;
 
 	return $result;

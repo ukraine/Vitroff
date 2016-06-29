@@ -1,66 +1,60 @@
 <?
-define('DEBUG', false);
 
 /*
 
-Мегафон Москва-926, 925
-Мегафон Центр-920
-Мегафон Северо Запад(Петербург)-921
-Мегафон Урал-922
-Мегафон Сибирь-923
-Мегафон Дальний Восток-924
-Мегафон Поволжье-927, 937, 922
-Мегафон Кавказ-928
-Просто для общения-929
-Мегафон Юг-920
-Мегафон Тверь-920
-Алло Инкогнито-499, 926
-Матрих-926
-Скайлинк-901,495
-Билайн-903,905,906,909,960,961,962,963,964,965,967
-МТС-910,911,912,913,914,915,916,917,918,919,980,985,987,988,981,495
-Теле2-904,908,951,950,952
-НСС-952
+ГЊГҐГЈГ ГґГ®Г­ ГЊГ®Г±ГЄГўГ -926, 925
+ГЊГҐГЈГ ГґГ®Г­ Г–ГҐГ­ГІГ°-920
+ГЊГҐГЈГ ГґГ®Г­ Г‘ГҐГўГҐГ°Г® Г‡Г ГЇГ Г¤(ГЏГҐГІГҐГ°ГЎГіГ°ГЈ)-921
+ГЊГҐГЈГ ГґГ®Г­ Г“Г°Г Г«-922
+ГЊГҐГЈГ ГґГ®Г­ Г‘ГЁГЎГЁГ°Гј-923
+ГЊГҐГЈГ ГґГ®Г­ Г„Г Г«ГјГ­ГЁГ© Г‚Г®Г±ГІГ®ГЄ-924
+ГЊГҐГЈГ ГґГ®Г­ ГЏГ®ГўГ®Г«Г¦ГјГҐ-927, 937, 922
+ГЊГҐГЈГ ГґГ®Г­ ГЉГ ГўГЄГ Г§-928
+ГЏГ°Г®Г±ГІГ® Г¤Г«Гї Г®ГЎГ№ГҐГ­ГЁГї-929
+ГЊГҐГЈГ ГґГ®Г­ ГћГЈ-920
+ГЊГҐГЈГ ГґГ®Г­ Г’ГўГҐГ°Гј-920
+ГЂГ«Г«Г® Г€Г­ГЄГ®ГЈГ­ГЁГІГ®-499, 926
+ГЊГ ГІГ°ГЁГµ-926
+Г‘ГЄГ Г©Г«ГЁГ­ГЄ-901,495
+ГЃГЁГ«Г Г©Г­-903,905,906,909,960,961,962,963,964,965,967
+ГЊГ’Г‘-910,911,912,913,914,915,916,917,918,919,980,985,987,988,981,495
+Г’ГҐГ«ГҐ2-904,908,951,950,952
+ГЌГ‘Г‘-952 
 
 */
 
 global $siteurl, $ForbiddenChars, $AllowedChars, $RequestRequiredFields, $calculator, $filestoragepath;
 
-define("DB_HOST", "localhost");
-define("DB_USER", "");
-define("DB_PASS", "");
-define("DB_NAME", "");
+$connection = mysql_connect("127.0.0.1", 
+                            "trof", 
+                            "6iB3PJ6hkCJS5winYtQiQ");
+mysql_select_db("trof", $connection);
+mysql_query("SET NAMES utf8"); 
 
-$connection = mysql_pconnect(DB_HOST,
-                            DB_USER,
-                            DB_PASS);
-mysql_select_db(DB_NAME, $connection);
+mysql_query ("set character_set_client='utf8'");
+mysql_query ("set character_set_results='utf8'");
+mysql_query ("set collation_connection='utf8_general_ci'");
 
-mysql_query("SET character_set_client = cp1251");
-mysql_query("SET character_set_connection = cp1251");
-mysql_query("SET character_set_results = utf8");
-
-
-$ForbiddenChars = array("'", "”", "“", "’", "‘ ", "`", "'",">","<","\"");
+$ForbiddenChars = array("'", "вЂќ", "вЂњ", "вЂ™", "вЂ ", "`", "'",">","<","\"");
 $AllowedChars = array("&#39;", "&rdquo;", "&ldquo;", "&rsquo;", "&lsquo;", "&#96;", "&#39;","&gt;","&lt;","&quot;");
 
 $YesOrNoArray = array("No","Yes");
 
 $ShippingOptions = array("USPS First Class","USPS Overnight");
 
-// Обязательные к заполнению поля для запросов на перевод
+// ГЋГЎГїГ§Г ГІГҐГ«ГјГ­Г»ГҐ ГЄ Г§Г ГЇГ®Г«Г­ГҐГ­ГЁГѕ ГЇГ®Г«Гї Г¤Г«Гї Г§Г ГЇГ°Г®Г±Г®Гў Г­Г  ГЇГҐГ°ГҐГўГ®Г¤
 $RequestRequiredFields = array("toemail"=>"E-mail address", "toname"=>"Contact name", "source_text"=>"Source text");
 
-// Обязательные поля для калькулятора
+// ГЋГЎГїГ§Г ГІГҐГ«ГјГ­Г»ГҐ ГЇГ®Г«Гї Г¤Г«Гї ГЄГ Г«ГјГЄГіГ«ГїГІГ®Г°Г 
 $ToEstimateRequiredFields = array("source_text"=>"Source text");
 
-// Переменные калькулятора
+// ГЏГҐГ°ГҐГ¬ГҐГ­Г­Г»ГҐ ГЄГ Г«ГјГЄГіГ«ГїГІГ®Г°Г 
 $calculator	= array("maxwordsperday"=>1000, "baseppw"=>0.05);
 
-// Место хранения файлов
+// ГЊГҐГ±ГІГ® ГµГ°Г Г­ГҐГ­ГЁГї ГґГ Г©Г«Г®Гў
 $filestoragepath = $_SERVER['DOCUMENT_ROOT']. "/shared/";
 
-// Папка для временных файлов
+// ГЏГ ГЇГЄГ  Г¤Г«Гї ГўГ°ГҐГ¬ГҐГ­Г­Г»Гµ ГґГ Г©Г«Г®Гў
 $tempfilestoragepath = $_SERVER['DOCUMENT_ROOT']. "/temp/";
 
 $SMSPortals = array(

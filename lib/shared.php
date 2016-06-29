@@ -1,6 +1,6 @@
 <?
 
-// Выборки из БД. Если есть значения, то возвращаем их, если нет, то возвращаем bool об ошибке
+// Г‚Г»ГЎГ®Г°ГЄГЁ ГЁГ§ ГЃГ„. Г…Г±Г«ГЁ ГҐГ±ГІГј Г§Г­Г Г·ГҐГ­ГЁГї, ГІГ® ГўГ®Г§ГўГ°Г Г№Г ГҐГ¬ ГЁГµ, ГҐГ±Г«ГЁ Г­ГҐГІ, ГІГ® ГўГ®Г§ГўГ°Г Г№Г ГҐГ¬ bool Г®ГЎ Г®ГёГЁГЎГЄГҐ
 function ProcessSQL ($table, $more="", $column="*",$showsql="0") {
 
 	$sql = "SELECT $column FROM $table $more";
@@ -44,7 +44,7 @@ function GetFinancialTotalForYear($year,$isYear="year") {
 }
 
 
-// Выборки из БД. Если есть значения, то возвращаем их, если нет, то возвращаем bool об ошибке
+// Г‚Г»ГЎГ®Г°ГЄГЁ ГЁГ§ ГЃГ„. Г…Г±Г«ГЁ ГҐГ±ГІГј Г§Г­Г Г·ГҐГ­ГЁГї, ГІГ® ГўГ®Г§ГўГ°Г Г№Г ГҐГ¬ ГЁГµ, ГҐГ±Г«ГЁ Г­ГҐГІ, ГІГ® ГўГ®Г§ГўГ°Г Г№Г ГҐГ¬ bool Г®ГЎ Г®ГёГЁГЎГЄГҐ
 // 12.10.2007
 function RunQueryReturnDataArray ($table, $more="", $column="*",$showsql="0") {
 
@@ -55,7 +55,7 @@ function RunQueryReturnDataArray ($table, $more="", $column="*",$showsql="0") {
 
 }
 
-// Выборки из БД. Если есть значения, то возвращаем их, если нет, то возвращаем bool об ошибке
+// Г‚Г»ГЎГ®Г°ГЄГЁ ГЁГ§ ГЃГ„. Г…Г±Г«ГЁ ГҐГ±ГІГј Г§Г­Г Г·ГҐГ­ГЁГї, ГІГ® ГўГ®Г§ГўГ°Г Г№Г ГҐГ¬ ГЁГµ, ГҐГ±Г«ГЁ Г­ГҐГІ, ГІГ® ГўГ®Г§ГўГ°Г Г№Г ГҐГ¬ bool Г®ГЎ Г®ГёГЁГЎГЄГҐ
 // 12.10.2007
 function RunSelectFromTableQuery($table, $more="", $column="*") {
 
@@ -66,13 +66,13 @@ function RunSelectFromTableQuery($table, $more="", $column="*") {
 }
 
 
-// Ошибки и уведомления системы
+// ГЋГёГЁГЎГЄГЁ ГЁ ГіГўГҐГ¤Г®Г¬Г«ГҐГ­ГЁГї Г±ГЁГ±ГІГҐГ¬Г»
 function ErrorMsg () {
 	global $error_msg, $status;
 	if (!empty($error_msg))	echo "<div class='error_msg' id='$status'> $error_msg</div>"; 
 }
 
-// Если значение переменной существует в каком-либо виде - отобразить
+// Г…Г±Г«ГЁ Г§Г­Г Г·ГҐГ­ГЁГҐ ГЇГҐГ°ГҐГ¬ГҐГ­Г­Г®Г© Г±ГіГ№ГҐГ±ГІГўГіГҐГІ Гў ГЄГ ГЄГ®Г¬-Г«ГЁГЎГ® ГўГЁГ¤ГҐ - Г®ГІГ®ГЎГ°Г Г§ГЁГІГј
 // 24.07.2010
 function ifExistGetValue($valuename,$YesOrNo=0,$res="") {
 
@@ -88,7 +88,7 @@ function ifExistGetValue($valuename,$YesOrNo=0,$res="") {
 
 }
 
-// Если значение переменной существует в каком-либо виде - отобразить
+// Г…Г±Г«ГЁ Г§Г­Г Г·ГҐГ­ГЁГҐ ГЇГҐГ°ГҐГ¬ГҐГ­Г­Г®Г© Г±ГіГ№ГҐГ±ГІГўГіГҐГІ Гў ГЄГ ГЄГ®Г¬-Г«ГЁГЎГ® ГўГЁГ¤ГҐ - Г®ГІГ®ГЎГ°Г Г§ГЁГІГј
 // 24.07.2010
 function ifExistGetValue2($valuename,$YesOrNo=0,$res="") {
 
@@ -104,7 +104,7 @@ function ifExistGetValue2($valuename,$YesOrNo=0,$res="") {
 
 }
 
-// Получить требуемое значение из таблицы по идентификатору
+// ГЏГ®Г«ГіГ·ГЁГІГј ГІГ°ГҐГЎГіГҐГ¬Г®ГҐ Г§Г­Г Г·ГҐГ­ГЁГҐ ГЁГ§ ГІГ ГЎГ«ГЁГ¶Г» ГЇГ® ГЁГ¤ГҐГ­ГІГЁГґГЁГЄГ ГІГ®Г°Гі
 function GetNameById (&$id, $table, $name) {
 
 	$res = RunQueryReturnDataArray($table, "WHERE `id`='$id'");
@@ -112,7 +112,7 @@ function GetNameById (&$id, $table, $name) {
 
 }
 
-// Если было выбрано ранее значение поля select - поставить аттрибут selected
+// Г…Г±Г«ГЁ ГЎГ»Г«Г® ГўГ»ГЎГ°Г Г­Г® Г°Г Г­ГҐГҐ Г§Г­Г Г·ГҐГ­ГЁГҐ ГЇГ®Г«Гї select - ГЇГ®Г±ГІГ ГўГЁГІГј Г ГІГІГ°ГЁГЎГіГІ selected
 function select($field, $number)	{
 
 	global $f;
@@ -122,7 +122,7 @@ function select($field, $number)	{
 
 }
 
-// Генерация списка селекта
+// ГѓГҐГ­ГҐГ°Г Г¶ГЁГї Г±ГЇГЁГ±ГЄГ  Г±ГҐГ«ГҐГЄГІГ 
 function GenerateSelectTag($from,$columntoselect,$orderbyname="name", $selecttag="") {
 
 		$res = mysql_query("select * from `$from` ORDER BY `$orderbyname`");
@@ -136,7 +136,7 @@ function GenerateSelectTag($from,$columntoselect,$orderbyname="name", $selecttag
 
 }
 
-// Если было выбрано ранее значение поля select - поставить аттрибут selected
+// Г…Г±Г«ГЁ ГЎГ»Г«Г® ГўГ»ГЎГ°Г Г­Г® Г°Г Г­ГҐГҐ Г§Г­Г Г·ГҐГ­ГЁГҐ ГЇГ®Г«Гї select - ГЇГ®Г±ГІГ ГўГЁГІГј Г ГІГІГ°ГЁГЎГіГІ selected
 function selectv2($field, $number)	{
 
 	global $f;
@@ -146,9 +146,9 @@ function selectv2($field, $number)	{
 }
 
 
-// Генерация тега select
+// ГѓГҐГ­ГҐГ°Г Г¶ГЁГї ГІГҐГЈГ  select
 // 03.08.2007
-// Название поля
+// ГЌГ Г§ГўГ Г­ГЁГҐ ГЇГ®Г«Гї
 function GenerateSelectList($WhatWhatTableToSelect, $nameOfIdentificatorAutoToSelect, $nameofvaluetoshow, $description="", $separator=" &nbsp; ")	{
 
 	$res = mysql_query("select * from `$WhatWhatTableToSelect` ORDER BY $nameofvaluetoshow");
@@ -199,7 +199,7 @@ function GenerateCheckBoxV2($array,$separator=" &nbsp; ",$br="<br>", $js="",$var
 
 }
 
-// Генерация тега input
+// ГѓГҐГ­ГҐГ°Г Г¶ГЁГї ГІГҐГЈГ  input
 // 29.08.2010
 // 08.11.2009
 function GenerateInputTag($name,$description, $type="text", $separator=" &nbsp; ",$br="<br>", $js="")	{
@@ -210,7 +210,8 @@ function GenerateInputTag($name,$description, $type="text", $separator=" &nbsp; 
 
 }
 
-// Генерация тега textarea
+
+// ГѓГҐГ­ГҐГ°Г Г¶ГЁГї ГІГҐГЈГ  textarea
 // 03.10.2007
 function GenerateTextAreaTag($name)	{
 
@@ -219,7 +220,7 @@ function GenerateTextAreaTag($name)	{
 }
 
 
-// Проверка правильности заполнения полей
+// ГЏГ°Г®ГўГҐГ°ГЄГ  ГЇГ°Г ГўГЁГ«ГјГ­Г®Г±ГІГЁ Г§Г ГЇГ®Г«Г­ГҐГ­ГЁГї ГЇГ®Г«ГҐГ©
 // 17.07.2007
 function IsRequiredFieldsFilled($RequiredFielsArray) {
 
@@ -232,7 +233,7 @@ function IsRequiredFieldsFilled($RequiredFielsArray) {
 			else return 0;
 }
 
-// Если переменная существует - выводим ее
+// Г…Г±Г«ГЁ ГЇГҐГ°ГҐГ¬ГҐГ­Г­Г Гї Г±ГіГ№ГҐГ±ГІГўГіГҐГІ - ГўГ»ГўГ®Г¤ГЁГ¬ ГҐГҐ
 // 29.08.2007
 function ifExistValueReturnIt($valuename) {
 
@@ -245,7 +246,7 @@ function ifExistValueReturnIt($valuename) {
 
 }
 
-// Отправка почты
+// ГЋГІГЇГ°Г ГўГЄГ  ГЇГ®Г·ГІГ»
 function sendmail ()	{
 
 	global $Settings, $error_msg;
@@ -267,20 +268,20 @@ function sendmail ()	{
 }
 
 
-// Отправка почты с вложениями
+// ГЋГІГЇГ°Г ГўГЄГ  ГЇГ®Г·ГІГ» Г± ГўГ«Г®Г¦ГҐГ­ГЁГїГ¬ГЁ
 // 17.10.2007
-// $ct = выбор типа контента, по умолчанию HTML, 1 - для смешанного типа
+// $ct = ГўГ»ГЎГ®Г° ГІГЁГЇГ  ГЄГ®Г­ГІГҐГ­ГІГ , ГЇГ® ГіГ¬Г®Г«Г·Г Г­ГЁГѕ HTML, 1 - Г¤Г«Гї Г±Г¬ГҐГёГ Г­Г­Г®ГЈГ® ГІГЁГЇГ 
 function sendmail2 ($ctype="0")	{
 
 	global $Settings, $error_msg, $filestoragepath;
 
-	// Пока не знаю для чого це потрібно, але вроде розділювач між прикріпленими файлами
+	// ГЏГ®ГЄГ  Г­ГҐ Г§Г­Г Гѕ Г¤Г«Гї Г·Г®ГЈГ® Г¶ГҐ ГЇГ®ГІГ°ВіГЎГ­Г®, Г Г«ГҐ ГўГ°Г®Г¤ГҐ Г°Г®Г§Г¤ВіГ«ГѕГўГ Г· Г¬ВіГ¦ ГЇГ°ГЁГЄГ°ВіГЇГ«ГҐГ­ГЁГ¬ГЁ ГґГ Г©Г«Г Г¬ГЁ
 	$mime_boundary = "==Multipart_Boundary_x{" . md5(time()) . "}x";
 
-	// Текст письма
+	// Г’ГҐГЄГ±ГІ ГЇГЁГ±ГјГ¬Г 
 	$content = html_entity_decode($_POST['content']);
 
-	// Массив с двуями видами шапками - просто HTML и смешанный (текст + аттачи)
+	// ГЊГ Г±Г±ГЁГў Г± Г¤ГўГіГїГ¬ГЁ ГўГЁГ¤Г Г¬ГЁ ГёГ ГЇГЄГ Г¬ГЁ - ГЇГ°Г®Г±ГІГ® HTML ГЁ Г±Г¬ГҐГёГ Г­Г­Г»Г© (ГІГҐГЄГ±ГІ + Г ГІГІГ Г·ГЁ)
 	$contenttype = array(
 		"Content-type: text/html; charset=\"UTF-8\"\r\n\r\n",
         "Content-Type: multipart/mixed; " . 
@@ -288,45 +289,45 @@ function sendmail2 ($ctype="0")	{
 		// "Content-Transfer-Encoding: 7bit\n\n"
 	);
 	
-	// Если есть файлы то подставляем соотв. другой хедер, а также прикреп. файлы
+	// Г…Г±Г«ГЁ ГҐГ±ГІГј ГґГ Г©Г«Г» ГІГ® ГЇГ®Г¤Г±ГІГ ГўГ«ГїГҐГ¬ Г±Г®Г®ГІГў. Г¤Г°ГіГЈГ®Г© ГµГҐГ¤ГҐГ°, Г  ГІГ ГЄГ¦ГҐ ГЇГ°ГЁГЄГ°ГҐГЇ. ГґГ Г©Г«Г»
 	if ($_POST['filelisting']) {
 
 		$ctype = "1";
 		
-		// указываем наличие файлов
+		// ГіГЄГ Г§Г»ГўГ ГҐГ¬ Г­Г Г«ГЁГ·ГЁГҐ ГґГ Г©Г«Г®Гў
 		$content .= "This is a multi-part message in MIME format.\n\n" . 
         "--{$mime_boundary}\n" . 
         "Content-Type; multipart/mixed\n" . 
         "Content-Transfer-Encoding: 7bit\n\n";
 
-		// Получаем массив из названий файлов, полученной из переменной POST
+		// ГЏГ®Г«ГіГ·Г ГҐГ¬ Г¬Г Г±Г±ГЁГў ГЁГ§ Г­Г Г§ГўГ Г­ГЁГ© ГґГ Г©Г«Г®Гў, ГЇГ®Г«ГіГ·ГҐГ­Г­Г®Г© ГЁГ§ ГЇГҐГ°ГҐГ¬ГҐГ­Г­Г®Г© POST
 		$filelisting = explode(";", $_POST['filelisting']);
 
-		// Убиваем последний элемент в этом массиве
+		// Г“ГЎГЁГўГ ГҐГ¬ ГЇГ®Г±Г«ГҐГ¤Г­ГЁГ© ГЅГ«ГҐГ¬ГҐГ­ГІ Гў ГЅГІГ®Г¬ Г¬Г Г±Г±ГЁГўГҐ
 		array_pop($filelisting);
 
-		// Тип файла по умаолчанию
+		// Г’ГЁГЇ ГґГ Г©Г«Г  ГЇГ® ГіГ¬Г Г®Г«Г·Г Г­ГЁГѕ
 		$fileatt_type = "application/octet-stream"; // File Type 
 
-		// Разбираем массив с файлами
+		// ГђГ Г§ГЎГЁГ°Г ГҐГ¬ Г¬Г Г±Г±ГЁГў Г± ГґГ Г©Г«Г Г¬ГЁ
 		foreach($filelisting as $key=>$value) {
 
-			// Получаем полный путь к файлу
+			// ГЏГ®Г«ГіГ·Г ГҐГ¬ ГЇГ®Г«Г­Г»Г© ГЇГіГІГј ГЄ ГґГ Г©Г«Гі
 			$filetoread = $filestoragepath.trim($value);
 
-			// Открываем его
+			// ГЋГІГЄГ°Г»ГўГ ГҐГ¬ ГҐГЈГ®
 			$file = fopen($filetoread,'rb'); 
 
-			// Считываем в буфер
+			// Г‘Г·ГЁГІГ»ГўГ ГҐГ¬ Гў ГЎГіГґГҐГ°
 			$data = fread($file,filesize($filetoread)); 
 
-			// Закрываем
+			// Г‡Г ГЄГ°Г»ГўГ ГҐГ¬
 			fclose($file);
 
-			// Конвертируем в емейл формат
+			// ГЉГ®Г­ГўГҐГ°ГІГЁГ°ГіГҐГ¬ Гў ГҐГ¬ГҐГ©Г« ГґГ®Г°Г¬Г ГІ
 			$data = chunk_split(base64_encode($data)); 
 			
-			// Загоняем сконвертированные данные в текст письма
+			// Г‡Г ГЈГ®Г­ГїГҐГ¬ Г±ГЄГ®Г­ГўГҐГ°ГІГЁГ°Г®ГўГ Г­Г­Г»ГҐ Г¤Г Г­Г­Г»ГҐ Гў ГІГҐГЄГ±ГІ ГЇГЁГ±ГјГ¬Г 
 			$content .= "\n\n--{$mime_boundary}\n" . 
 					  "Content-Type: {$fileatt_type};" . 
 					  " name=\"" . trim($value) . "\";\n" . 
@@ -340,7 +341,7 @@ function sendmail2 ($ctype="0")	{
 
 	}
 
-	// Формирование шапки в зависимости от наличия файлов
+	// Г”Г®Г°Г¬ГЁГ°Г®ГўГ Г­ГЁГҐ ГёГ ГЇГЄГЁ Гў Г§Г ГўГЁГ±ГЁГ¬Г®Г±ГІГЁ Г®ГІ Г­Г Г«ГЁГ·ГЁГї ГґГ Г©Г«Г®Гў
 	$headers = 
 		"From: $_POST[fromname] <$_POST[fromemail]>\r\n" .
 		"Reply-To: $_POST[fromname] <$_POST[fromemail]>\r\n" .
@@ -357,7 +358,7 @@ function sendmail2 ($ctype="0")	{
 }
 
 
-// Получение общих параметров системы
+// ГЏГ®Г«ГіГ·ГҐГ­ГЁГҐ Г®ГЎГ№ГЁГµ ГЇГ Г°Г Г¬ГҐГІГ°Г®Гў Г±ГЁГ±ГІГҐГ¬Г»
 function getSettings()	{
 
 	global $Settings;
@@ -367,19 +368,21 @@ function getSettings()	{
 
 function ApplyTemplate($template="",$details)	{
 
-	$content = file_get_contents("tpl/$template.html");
+	$content = file_get_contents("tpl/$template");
 
-		// Удаляем значения стоимости слова в начале ключа area
+//	echo $template;
+
+		// Г“Г¤Г Г«ГїГҐГ¬ Г§Г­Г Г·ГҐГ­ГЁГї Г±ГІГ®ГЁГ¬Г®Г±ГІГЁ Г±Г«Г®ГўГ  Гў Г­Г Г·Г Г«ГҐ ГЄГ«ГѕГ·Г  area
 		foreach($details as $key=>$val) {
 			if (!empty($val)) $content = str_replace("%%%" . strtoupper($key) . "%%%", preg_replace('/(.*)_/','',$val), $content);
 		}
 
-		// Меняем оставшиеся и необработанные переменные на n/a
+		// ГЊГҐГ­ГїГҐГ¬ Г®Г±ГІГ ГўГёГЁГҐГ±Гї ГЁ Г­ГҐГ®ГЎГ°Г ГЎГ®ГІГ Г­Г­Г»ГҐ ГЇГҐГ°ГҐГ¬ГҐГ­Г­Г»ГҐ Г­Г  n/a
 		return preg_replace('/%(.*)%/','n/a',$content);
 
 }
 
-// Генерация списка селекта
+// ГѓГҐГ­ГҐГ°Г Г¶ГЁГї Г±ГЇГЁГ±ГЄГ  Г±ГҐГ«ГҐГЄГІГ 
 function GenerateLinksList($table,$more="",$orderbyname="name",$columntoselect="*",$selecttag="", $orderby="") {
 
 		if (!empty($orderbyname)) $orderby =  "ORDER BY `$orderbyname`";
@@ -412,6 +415,58 @@ function GenerateLinksList($table,$more="",$orderbyname="name",$columntoselect="
 		}
 			return $selecttag;
 
+}
+
+
+function num2str($num) {
+
+	$num = round($num);
+
+    $nul='Г­Г®Г«Гј';
+    $ten=array(
+        array('','Г®Г¤ГЁГ­','Г¤ГўГ ','ГІГ°ГЁ','Г·Г®ГІГЁГ°ГЁ','ГЇ\'ГїГІГј','ГёВіГ±ГІГј','Г±ВіГ¬', 'ГўВіГ±ВіГ¬','Г¤ГҐГў\'ГїГІГј'),
+        array('','Г®Г¤Г­Г ','Г¤ГўВі','ГІГ°ГЁ','Г·Г®ГІГЁГ°ГЁ','ГЇГїГІГј','ГёВіГ±ГІГј','Г±ВіГ¬', 'ГўВіГ±ВіГ¬','Г¤ГҐГў\'ГїГІГј'),
+    );
+    $a20=array('Г¤ГҐГ±ГїГІГј','Г®Г¤ГЁГ­Г Г¤Г¶ГїГІГј','Г¤ГўГ Г­Г Г¤Г¶ГїГІГј','ГІГ°ГЁГ­Г Г¤Г¶ГїГІГј','Г·Г®ГІГЁГ°Г­Г Г¤Г¶Г ГІГј' ,'ГЇГї\'ГІГ­Г Г¤Г¶Г ГІГј','ГёВіГ±ГІГ­Г Г¤Г¶ГїГІГј','Г±ВіГ¬Г­Г Г¤Г¶ГїГІГј','ГўВіГ±ВіГ¬Г­Г Г¤Г¶Г ГІГј','Г¤ГҐГўГї\'ГІГ­Г Г¤Г¶ГїГІГј');
+    $tens=array(2=>'Г¤ГўГ Г¤Г¶ГїГІГј','ГІГ°ГЁГ¤Г¶ГїГІГј','Г±Г®Г°Г®ГЄ','ГЇГї\'ГІГ¤ГҐГ±ГїГІ','ГёВіГ±ГІГ¤ГҐГ±ГїГІ','Г±ВіГ¬Г¤ГҐГ±ГїГІ' ,'ГўВіГ±ВіГ¬Г¤ГҐГ±ГїГІ','Г¤ГҐГў\'ГїГ­Г®Г±ГІГ®');
+    $hundred=array('','Г±ГІГ®','Г¤ГўВіГ±ГІВі','ГІГ°ГЁГ±ГІГ ','Г·Г®ГІГЁГ°ГЁГ±ГІГ ','ГЇ\'ГїГІГ±Г®ГІ','ГёВіГ±ГІГ±Г®ГІ', 'Г±ВіГ¬Г±Г®ГІ','ГўВіГ±ВіГ¬Г±Г®ГІ','Г¤ГҐГў\'ГїГІГ±Г®ГІ');
+    $unit=array( // Units
+        array('ГЄГ®ГЇВіГ©ГЄГ ' ,'ГЄГ®ГЇВіГ©ГЄГЁ' ,'ГЄГ®ГЇВіГ©Г®ГЄ',	 1),
+        array('ГЈГ°ГЁГўГ­Гї'   ,'ГЈГ°ГЁГўГ­Ві'   ,'ГЈГ°ГЁГўГҐГ­Гј'    ,0),
+        array('ГІГЁГ±ГїГ·Г '  ,'ГІГЁГ±ГїГ·Ві'  ,'ГІГЁГ±ГїГ·'     ,1),
+        array('Г¬ВіГ«ГјГ©Г®Г­' ,'Г¬ВіГ«ГјГ©Г®Г­Г ','Г¬ВіГ«ГјГ©Г®Г­ВіГў' ,0),
+        array('Г¬ВіГ«ГјГїГ°Г¤','Г¬ВіГ«ГјГїГ°Г¤Г ','Г¬ВіГ«ГјГїГ°Г¤ВіГў',0),
+    );
+    //
+    list($rub,$kop) = explode('.',sprintf("%015.2f", floatval($num)));
+    $out = array();
+    if (intval($rub)>0) {
+        foreach(str_split($rub,3) as $uk=>$v) { // by 3 symbols
+            if (!intval($v)) continue;
+            $uk = sizeof($unit)-$uk-1; // unit key
+            $gender = $unit[$uk][3];
+            list($i1,$i2,$i3) = array_map('intval',str_split($v,1));
+            // mega-logic
+            $out[] = $hundred[$i1]; # 1xx-9xx
+            if ($i2>1) $out[]= $tens[$i2].' '.$ten[$gender][$i3]; # 20-99
+            else $out[]= $i2>0 ? $a20[$i3] : $ten[$gender][$i3]; # 10-19 | 1-9
+            // units without rub & kop
+            if ($uk>1) $out[]= morph($v,$unit[$uk][0],$unit[$uk][1],$unit[$uk][2]);
+        } //foreach
+    }
+    else $out[] = $nul;
+    $out[] = morph(intval($rub), $unit[1][0],$unit[1][1],$unit[1][2]); // rub
+    $out[] = $kop.' '.morph($kop,$unit[0][0],$unit[0][1],$unit[0][2]); // kop
+    return trim(preg_replace('/ {2,}/', ' ', join(' ',$out)));
+}
+
+function morph($n, $f1, $f2, $f5) {
+    $n = abs(intval($n)) % 100;
+    if ($n>10 && $n<20) return $f5;
+    $n = $n % 10;
+    if ($n>1 && $n<5) return $f2;
+    if ($n==1) return $f1;
+    return $f5;
 }
 
 ?>

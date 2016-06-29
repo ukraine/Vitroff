@@ -27,8 +27,8 @@ for ($i=0; $i < mysql_num_rows($res); $i++)
 	$number = $i+$startobject;
 	
 	$f = mysql_fetch_array($res);
-	$source = GetNameById ($f['source'], 'languages','name');
-	$target = GetNameById ($f['target'], 'languages','name');
+	$source = GetNameById (&$f['source'], 'languages','name');
+	$target = GetNameById (&$f['target'], 'languages','name');
 
 	echo
 	  "\t<tr" . PairedLineOrNot($number) . ">"
